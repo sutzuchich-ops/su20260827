@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國中自然科學自主學習平台 | 南一版 國二～國三全領域互動學習館 (理化・地科)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- KaTeX for math formula rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.85);
+        }
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 4s ease-in-out infinite;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.25s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 1: 學生登入入口畫面 (STUDENT LOGIN VIEW)                               -->
+    <!-- ========================================================================= -->
+    <div id="view-login" class="flex-grow flex flex-col justify-center items-center relative overflow-hidden py-12 px-4 sm:px-6">
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 -z-20"></div>
+        <div class="absolute top-10 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-pulse-slow -z-10 pointer-events-none"></div>
+        <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-cyan-600/20 rounded-full blur-3xl animate-pulse-slow -z-10 pointer-events-none" style="animation-delay: 2s;"></div>
+
+        <div class="w-full max-w-md mx-auto fade-in">
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center space-x-2 bg-indigo-500/20 border border-indigo-400/30 px-3.5 py-1.5 rounded-full text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-earth-americas text-cyan-400 animate-spin" style="animation-duration: 10s;"></i>
+                    <span>南一版 國中自然科學自主學習平台</span>
+                </div>
+                <h1 class="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
+                    自然全領域學習館
+                </h1>
+                <p class="text-slate-400 text-xs sm:text-sm mt-2">理化 (19單元) + 地球科學 (6單元) ・ 共 25 大單元・250 題題庫</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-7 sm:p-8 shadow-2xl border border-slate-700/50">
+                <form id="student-login-form" onsubmit="handleStudentLogin(event)" class="space-y-5">
+                    
+                    <!-- Avatar Selection -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">
+                            <i class="fa-solid fa-user-astronaut text-indigo-600 mr-1"></i> 選擇學習角色頭像
+                        </label>
+                        <div class="grid grid-cols-6 gap-2" id="avatar-picker">
+                            <button type="button" onclick="selectAvatar('🧪')" class="avatar-opt h-11 rounded-xl bg-indigo-50 border-2 border-indigo-600 text-xl flex items-center justify-center hover:scale-110 transition shadow-sm" data-avatar="🧪">🧪</button>
+                            <button type="button" onclick="selectAvatar('🔭')" class="avatar-opt h-11 rounded-xl bg-slate-100 border-2 border-transparent text-xl flex items-center justify-center hover:scale-110 transition hover:bg-indigo-50" data-avatar="🔭">🔭</button>
+                            <button type="button" onclick="selectAvatar('🌍')" class="avatar-opt h-11 rounded-xl bg-slate-100 border-2 border-transparent text-xl flex items-center justify-center hover:scale-110 transition hover:bg-indigo-50" data-avatar="🌍">🌍</button>
+                            <button type="button" onclick="selectAvatar('⚛️')" class="avatar-opt h-11 rounded-xl bg-slate-100 border-2 border-transparent text-xl flex items-center justify-center hover:scale-110 transition hover:bg-indigo-50" data-avatar="⚛️">⚛️</button>
+                            <button type="button" onclick="selectAvatar('⚡')" class="avatar-opt h-11 rounded-xl bg-slate-100 border-2 border-transparent text-xl flex items-center justify-center hover:scale-110 transition hover:bg-indigo-50" data-avatar="⚡">⚡</button>
+                            <button type="button" onclick="selectAvatar('🤖')" class="avatar-opt h-11 rounded-xl bg-slate-100 border-2 border-transparent text-xl flex items-center justify-center hover:scale-110 transition hover:bg-indigo-50" data-avatar="🤖">🤖</button>
+                        </div>
+                        <input type="hidden" id="login-avatar" value="🧪">
+                    </div>
+
+                    <!-- Student Name -->
+                    <div>
+                        <label for="login-name" class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                            <i class="fa-solid fa-signature text-indigo-600 mr-1"></i> 學生姓名 <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <input type="text" id="login-name" required placeholder="例如：王小明" 
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                        </div>
+                    </div>
+
+                    <!-- Grade and Seat -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label for="login-class" class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                <i class="fa-solid fa-school text-indigo-600 mr-1"></i> 班級 <span class="text-rose-500">*</span>
+                            </label>
+                            <select id="login-class" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                                <option value="801 班">801 班 (國二)</option>
+                                <option value="802 班">802 班 (國二)</option>
+                                <option value="803 班" selected>803 班 (國二)</option>
+                                <option value="901 班">901 班 (國三)</option>
+                                <option value="902 班">902 班 (國三)</option>
+                                <option value="自訂班級">自訂班級</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="login-seat" class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">
+                                <i class="fa-solid fa-hashtag text-indigo-600 mr-1"></i> 座號 <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="number" id="login-seat" min="1" max="60" value="15" required placeholder="座號 (1-60)"
+                                class="w-full py-2.5 px-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-500/30 transition transform active:scale-98 flex items-center justify-center space-x-2">
+                        <span>進入自然全領域學習大廳</span>
+                        <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </button>
+
+                    <!-- Quick Demo Login -->
+                    <div class="pt-2 border-t border-slate-200">
+                        <button type="button" onclick="quickGuestLogin()" class="w-full py-2.5 px-4 rounded-xl border border-slate-300 hover:border-indigo-400 bg-white hover:bg-indigo-50/50 text-slate-700 text-xs font-semibold transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-bolt text-amber-500"></i>
+                            <span>一鍵免輸入訪客體驗（示範學生）</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="mt-6 bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center text-xs text-slate-400 flex items-center justify-center space-x-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>🔥 <strong class="text-emerald-300">南一版國中自然（理化＋地科）共 25 大單元全數上線！</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 2: 學生學習大廳 / 單元總覽 (STUDENT PORTAL DASHBOARD)                   -->
+    <!-- ========================================================================= -->
+    <div id="view-portal" class="hidden flex-grow flex-col bg-slate-900 text-slate-100 min-h-screen">
+        <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-tr from-indigo-600 via-cyan-500 to-emerald-400 p-2 rounded-xl text-white shadow-md">
+                        <i class="fa-solid fa-atom text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base sm:text-lg font-bold text-white tracking-wide">南一版 國中自然全領域學習網</h1>
+                        <p class="text-[11px] text-slate-400 hidden sm:block">物理・化學・地球科學 完整 25 大單元主控台</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                    <div class="bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-1.5 flex items-center space-x-2.5">
+                        <span id="portal-user-avatar" class="text-xl">🧪</span>
+                        <div class="text-left leading-tight">
+                            <div class="text-xs font-bold text-white flex items-center space-x-1">
+                                <span id="portal-user-name">王小明</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400" id="portal-user-class">803班 15號</div>
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()" title="登出切換帳號" class="p-2.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-xl transition border border-transparent hover:border-slate-700">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <span class="sr-only">登出</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 fade-in">
+            
+            <!-- Welcome Banner & Quick Stats -->
+            <div class="relative overflow-hidden bg-gradient-to-r from-indigo-900/90 via-slate-800 to-teal-950 border border-indigo-500/30 rounded-2xl p-6 sm:p-8 shadow-xl">
+                <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-emerald-500/10 to-transparent pointer-events-none"></div>
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                    <div>
+                        <div class="inline-flex items-center space-x-2 bg-indigo-500/20 text-indigo-300 text-xs px-3 py-1 rounded-full mb-3 border border-indigo-400/20">
+                            <i class="fa-solid fa-sparkles text-yellow-400"></i>
+                            <span>理化 19 單元 ＋ 地科 6 單元・全方位會考總複習</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">
+                            嗨，<span id="banner-user-name" class="text-cyan-400">同學</span>！展開自然科學探索之旅！
+                        </h2>
+                        <p class="text-slate-300 text-xs sm:text-sm mt-2 max-w-2xl leading-relaxed">
+                            包含物質世界、力與運動、電與磁、化學反應、地表地質、大氣天氣與天文宇宙，配備專屬互動模擬實驗室與 250 題觀念隨堂測驗！
+                        </p>
+                    </div>
+
+                    <!-- Learning Stats Cards -->
+                    <div class="grid grid-cols-3 gap-3 shrink-0">
+                        <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 text-center min-w-[90px]">
+                            <div class="text-[11px] text-slate-400">已完成單元</div>
+                            <div id="stat-completed-units" class="text-xl font-bold text-emerald-400 font-mono mt-0.5">0 <span class="text-xs text-slate-500">/ 25</span></div>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 text-center min-w-[90px]">
+                            <div class="text-[11px] text-slate-400">測驗總平均</div>
+                            <div id="stat-quiz-avg" class="text-xl font-bold text-amber-400 font-mono mt-0.5">--</div>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 text-center min-w-[90px]">
+                            <div class="text-[11px] text-slate-400">獲得勳章</div>
+                            <div id="stat-badge-count" class="text-xl font-bold text-cyan-400 font-mono mt-0.5">1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Semester Filter Tabs -->
+            <div class="flex flex-wrap items-center gap-2 border-b border-slate-800 pb-4">
+                <button onclick="filterUnits('all')" id="tab-btn-all" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow-sm transition">
+                    🌟 全部單元 (25)
+                </button>
+                <button onclick="filterUnits('b3')" id="tab-btn-b3" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+                    📘 國二上・理化 (6)
+                </button>
+                <button onclick="filterUnits('b4')" id="tab-btn-b4" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+                    📗 國二下・理化 (6)
+                </button>
+                <button onclick="filterUnits('b5')" id="tab-btn-b5" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+                    📙 國三上・理化+地科 (7)
+                </button>
+                <button onclick="filterUnits('b6')" id="tab-btn-b6" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+                    📕 國三下・理化+地科 (6)
+                </button>
+                <button onclick="filterUnits('earth')" id="tab-btn-earth" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-teal-300 border border-teal-500/30 hover:bg-teal-900/30 transition">
+                    🌍 地球科學專區 (6)
+                </button>
+            </div>
+
+            <!-- Units Grid Container -->
+            <div id="units-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically generated 25 unit cards via JS -->
+            </div>
+
+            <!-- Badges Section -->
+            <div class="bg-slate-800/60 border border-slate-700 rounded-2xl p-6">
+                <h4 class="text-base font-bold text-white mb-4 flex items-center">
+                    <i class="fa-solid fa-award text-yellow-400 mr-2"></i> 南一版自然會考榮譽成就勳章
+                </h4>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5" id="badges-container">
+                    <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 text-center flex flex-col items-center justify-center">
+                        <div class="text-2xl mb-1">🌟</div>
+                        <div class="text-xs font-bold text-white">啟程探險家</div>
+                        <div class="text-[10px] text-slate-400">登入學習平台</div>
+                    </div>
+                    <div id="badge-box-b3" class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 text-center flex flex-col items-center justify-center opacity-40">
+                        <div class="text-2xl mb-1">📘</div>
+                        <div class="text-xs font-bold text-white">國二上理化通</div>
+                        <div class="text-[10px] text-slate-400">第3冊全通關</div>
+                    </div>
+                    <div id="badge-box-b4" class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 text-center flex flex-col items-center justify-center opacity-40">
+                        <div class="text-2xl mb-1">📗</div>
+                        <div class="text-xs font-bold text-white">國二下理化通</div>
+                        <div class="text-[10px] text-slate-400">第4冊全通關</div>
+                    </div>
+                    <div id="badge-box-earth" class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 text-center flex flex-col items-center justify-center opacity-40">
+                        <div class="text-2xl mb-1">🌍</div>
+                        <div class="text-xs font-bold text-white">地科大師</div>
+                        <div class="text-[10px] text-slate-400">地科6單元通關</div>
+                    </div>
+                    <div id="badge-box-g9" class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 text-center flex flex-col items-center justify-center opacity-40">
+                        <div class="text-2xl mb-1">⚡</div>
+                        <div class="text-xs font-bold text-white">國三會考先鋒</div>
+                        <div class="text-[10px] text-slate-400">國三全單元通關</div>
+                    </div>
+                    <div id="badge-box-perfect" class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 text-center flex flex-col items-center justify-center opacity-40">
+                        <div class="text-2xl mb-1">👑</div>
+                        <div class="text-xs font-bold text-white">會考滿級分狀元</div>
+                        <div class="text-[10px] text-slate-400">全25單元滿分</div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="bg-slate-950 text-slate-500 py-6 text-center text-xs border-t border-slate-800 mt-12">
+            <p>國中自然科學 - 南一版自然全領域自主學習平台 (理化・地科)</p>
+        </footer>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 3: 模組化單元學習館 (MODULAR DYNAMIC UNIT LEARNING HALL)                 -->
+    <!-- ========================================================================= -->
+    <div id="view-unit" class="hidden flex-grow flex-col bg-slate-50 text-slate-800 min-h-screen">
+        
+        <!-- Unit Top Nav -->
+        <header id="unit-header" class="sticky top-0 z-50 bg-indigo-900 text-white shadow-md transition-colors duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <button onclick="returnToPortal()" class="bg-black/20 hover:bg-black/40 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1 border border-white/20">
+                        <i class="fa-solid fa-chevron-left"></i>
+                        <span>返回大廳</span>
+                    </button>
+                    <div class="h-5 w-px bg-white/20 hidden sm:block"></div>
+                    <div>
+                        <span id="unit-header-semester" class="text-[10px] uppercase font-bold tracking-wider text-cyan-300 block leading-none">國二上・第3冊</span>
+                        <h1 id="unit-header-title" class="text-sm sm:text-base font-bold tracking-wide leading-tight">單元 3-1：基本測量與密度</h1>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <select id="unit-quick-select" onchange="openUnit(this.value)" class="bg-black/30 text-white text-xs py-1.5 px-2 rounded-lg border border-white/20 focus:outline-none hidden md:block max-w-[200px] truncate">
+                        <!-- Populated by JS with all 25 units -->
+                    </select>
+                    <div class="bg-black/30 border border-white/20 rounded-lg px-2.5 py-1 flex items-center space-x-1 text-xs">
+                        <span class="user-avatar-tag">🧪</span>
+                        <span class="user-name-tag font-bold text-slate-100">學生</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Unit Main Content -->
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 fade-in">
+            
+            <!-- SECTION 1: 觀念精要與核心重點 -->
+            <section id="unit-sec-concepts">
+                <div class="glass-card rounded-2xl p-6 md:p-8 shadow-sm">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <span class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">一</span>
+                        <h2 class="text-2xl font-bold text-slate-800">觀念精要與核心重點</h2>
+                    </div>
+                    <div id="unit-concepts-container" class="space-y-4">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: 核心公式與動態互動實驗室 -->
+            <section id="unit-sec-interactive">
+                <div class="glass-card rounded-2xl p-6 md:p-8 shadow-sm">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <span class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">二</span>
+                        <h2 class="text-2xl font-bold text-slate-800">核心原理與動態互動實驗室</h2>
+                    </div>
+                    <div id="unit-interactive-container">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: 觀念隨堂測驗 (10題) -->
+            <section id="unit-sec-quiz" class="scroll-mt-20">
+                <div class="glass-card rounded-2xl p-6 md:p-8 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">三</span>
+                            <h2 class="text-2xl font-bold text-slate-800">觀念隨堂測驗（共 10 題）</h2>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-indigo-50 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-indigo-700">
+                            <div>進度：<span id="quiz-progress-num">0</span> / 10 題</div>
+                            <div class="h-4 w-px bg-indigo-200"></div>
+                            <div>得分：<span id="quiz-score-num">0</span> 分</div>
+                            <button onclick="resetCurrentQuiz()" class="ml-2 underline text-indigo-600 hover:text-indigo-900">重置</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 p-3 bg-slate-100 rounded-xl flex flex-wrap items-center gap-1.5" id="quiz-nav-btns"></div>
+                    <div id="quiz-cards-container" class="space-y-6 max-w-3xl mx-auto"></div>
+
+                    <div id="quiz-summary-box" class="hidden mt-8 p-6 bg-slate-900 text-white rounded-2xl text-center space-y-4 shadow-xl">
+                        <h3 class="text-2xl font-bold text-yellow-300">🎉 本單元測驗完成！</h3>
+                        <p class="text-lg">恭喜 <span id="quiz-summary-student" class="text-cyan-300 font-bold"></span> 同學，最終得分：<span id="quiz-summary-score" class="text-3xl font-extrabold text-emerald-400">0</span> / 100 分</p>
+                        <p id="quiz-summary-feedback" class="text-slate-300 text-sm"></p>
+                        <div class="flex justify-center gap-3 pt-2">
+                            <button onclick="resetCurrentQuiz()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow">重新測驗</button>
+                            <button onclick="returnToPortal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow">儲存並返回大廳</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="bg-slate-800 text-slate-400 py-6 text-center text-sm border-t border-slate-700">
+            <p>國中自然科學 - 南一版自然全領域自主學習平台</p>
+        </footer>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- APPLICATION JAVASCRIPT DATABASE & ENGINE (25 UNITS / 250 QUESTIONS)       -->
+    <!-- ========================================================================= -->
+    <script>
+        /* -------------------------------------------------------------
+           1. 25-UNIT CURRICULUM DATABASE (南一版國二～國三 理化＋地科)
+        ------------------------------------------------------------- */
+        const curriculumData = [
+            // ==================== 國二上 (第3冊 理化) ====================
+            {
+                id: 'u3_1', book: 'b3', category: 'physics', semester: '國二上・第 3 冊', num: '單元 3-1', title: '基本測量與密度', icon: '⚖️', themeColor: 'indigo',
+                desc: '長度與體積測量、質量、密度公式 D=M/V、M-V 關係圖與 4℃ 水異常膨脹。', tags: ['公式計算', 'M-V圖分析', '浮沉水槽'],
+                concepts: [
+                    { title: '密度的定義與單位', content: '密度為單位體積內所含物質的質量：$D = \\frac{M}{V}$。常用單位為 $\\text{g/cm}^3$ (CGS) 與 $\\text{kg/m}^3$ (SI)，且 $1\\text{ g/cm}^3 = 1000\\text{ kg/m}^3$。' },
+                    { title: '物質的固有特性', content: '定溫定壓下，同種純物質的密度為定值，與質量或形狀無關；把鐵塊切半，密度依然不變。' },
+                    { title: '水的異常熱縮冷脹', content: '水在 4°C 時密度最大 (約 $1.0\\text{ g/cm}^3$)、體積最小。由 0°C 升至 4°C 時熱縮冷脹，大於 4°C 恢復熱脹冷縮。' }
+                ],
+                calcType: 'density',
+                quiz: [
+                    { q: "將 200g 鐵塊切成兩半，其中半塊的密度為何？", opts: ["變為原本的二分之一", "保持不變", "變為原本兩倍", "無法確定"], ans: 1, exp: "密度為物質固有特性，切割後質量與體積同比例減少，比值保持不變。" },
+                    { q: "水在 0°C 到 4°C 升溫時的物理現象為何？", opts: ["體積膨脹，密度變大", "體積收縮，密度變大（熱縮冷脹）", "體積膨脹，密度變小", "體積與密度皆不變"], ans: 1, exp: "水在 0~4°C 會熱縮冷脹，4°C 時體積最小、密度最大。" },
+                    { q: "在 M-V 圖（質量-體積圖）中，過原點直線的斜率代表？", opts: ["質量", "體積", "密度", "溫度"], ans: 2, exp: "斜率 ΔM/ΔV 即為密度。" },
+                    { q: "某液體密度為 1.2 g/cm³，換算為 SI 制 (kg/m³) 為？", opts: ["12", "120", "1200", "0.0012"], ans: 2, exp: "1 g/cm³ = 1000 kg/m³，故為 1200 kg/m³。" },
+                    { q: "用量筒裝液體繪製 M-V 圖，直線不通過原點，Y 軸截距代表？", opts: ["液體密度", "空量筒質量", "量筒容積上限", "大氣壓力"], ans: 1, exp: "液體體積為 0 時所測得的質量即為空量筒的質量。" },
+                    { q: "木塊 (0.8 g/cm³) 放入純水 (1.0 g/cm³) 中會？", opts: ["沉底", "懸浮於水中央", "浮在水面上", "溶解於水中"], ans: 2, exp: "D物 < D液 時物體會浮在液面。" },
+                    { q: "寒冬湖面結冰時，湖底水溫通常維持在幾度保護魚類？", opts: ["-4°C", "0°C", "4°C", "10°C"], ans: 2, exp: "4°C 的水密度最大沉於湖底，維持約 4°C。" },
+                    { q: "質量 150g、體積 50 cm³ 的物體密度為？", opts: ["0.33 g/cm³", "3.0 g/cm³", "7.5 g/cm³", "7500 g/cm³"], ans: 1, exp: "D = 150 / 50 = 3.0 g/cm³。" },
+                    { q: "關於密度的觀念，下列敘述何者正確？", opts: ["密度相同一定是同一種物質", "密度不同必定為不同物質", "質量愈大密度必定愈大", "把物體壓扁密度會增加"], ans: 1, exp: "密度不同必定為不同物質；但不同物質密度可能偶然相同。" },
+                    { q: "物體在甲液 (0.8 g/cm³) 沉底、在乙液 (1.2 g/cm³) 浮起，其密度可能為？", opts: ["0.6 g/cm³", "1.0 g/cm³", "1.4 g/cm³", "13.6 g/cm³"], ans: 1, exp: "密度介於 0.8 與 1.2 之間，1.0 g/cm³ 合理。" }
+                ]
+            },
+            {
+                id: 'u3_2', book: 'b3', category: 'chemistry', semester: '國二上・第 3 冊', num: '單元 3-2', title: '物質的世界與水溶液', icon: '💧', themeColor: 'cyan',
+                desc: '純物質與混合物、空氣組成、重量百分濃度計算、溶解度與飽和溶液。', tags: ['濃度計算', '溶解度曲線', '空氣組成'],
+                concepts: [
+                    { title: '純物質 vs 混合物', content: '純物質有固定的熔點、沸點與密度（如純水、氧氣、食鹽）；混合物無固定組成與沸點（如空氣、食鹽水、黃銅）。' },
+                    { title: '重量百分濃度公式', content: '$\\text{重量百分濃度 (P\\%)} = \\frac{\\text{溶質質量}}{\\text{溶液質量}} \\times 100\\% = \\frac{\\text{溶質}}{\\text{溶質}+\\text{溶劑}} \\times 100\\%$。' },
+                    { title: '空氣成分比例', content: '空氣中含量最多為氮氣 ($N_2$, 約 78%)，其次為氧氣 ($O_2$, 約 21%)，惰性氣體中含量最多為氬氣 ($Ar$, 約 0.9%)。' }
+                ],
+                calcType: 'solution',
+                quiz: [
+                    { q: "將 20g 食鹽溶於 80g 水中，重量百分濃度為多少？", opts: ["20%", "25%", "80%", "16.7%"], ans: 0, exp: "20 / (20 + 80) × 100% = 20%。" },
+                    { q: "乾燥空氣中含量最多的氣體是？", opts: ["氧氣", "氮氣", "二氧化碳", "氬氣"], ans: 1, exp: "氮氣約佔 78%，為空氣中含量最高者。" },
+                    { q: "在已達飽和的糖水中再加入 5g 砂糖並攪拌，溶液濃度會？", opts: ["增加", "減少", "保持不變", "無法判定"], ans: 2, exp: "已飽和無法再溶解，加入的糖沉澱，濃度保持不變。" },
+                    { q: "空氣中含量最多的「鈍氣（惰性氣體）」是？", opts: ["氦氣", "氖氣", "氬氣", "氪氣"], ans: 2, exp: "氬氣約佔 0.9%，為空氣中含量最多的惰性氣體。" },
+                    { q: "下列何者屬於「純物質」？", opts: ["食鹽水", "純金 (24K)", "空氣", "不鏽鋼"], ans: 1, exp: "純金為單一金屬元素 (Au)，屬於純物質。" },
+                    { q: "硝酸鉀在 60°C 溶解度為 110g/100g 水。此時 50g 水最多溶多少硝酸鉀？", opts: ["110g", "55g", "220g", "50g"], ans: 1, exp: "100g 水溶 110g，故 50g 水最多溶 55g。" },
+                    { q: "想要使未飽和的食鹽水達到飽和，下列何種方法「無效」？", opts: ["加入更多食鹽", "蒸發部分水分", "加入更多水", "降低溫度(對大多數固體)"], ans: 2, exp: "加水會使溶液變得更稀薄（未飽和）。" },
+                    { q: "二氧化碳通入澄清石灰水中會產生白色沉澱，沉澱物是？", opts: ["碳酸鈣", "硫酸鈣", "氯化鈣", "氫氧化鈣"], ans: 0, exp: "反應生成不溶於水的碳酸鈣 (CaCO₃) 白色沉澱。" },
+                    { q: "雙氧水製造氧氣時，加入二氧化錳的作用是？", opts: ["反應物", "催化劑(加快速率)", "指示劑", "溶劑"], ans: 1, exp: "二氧化錳 (MnO₂) 作為催化劑，本身質量與化學性質不變。" },
+                    { q: "下列哪一種氣體密度比空氣小且不可燃，常用於填充安全氣球？", opts: ["氫氣", "氦氣", "氧氣", "二氧化碳"], ans: 1, exp: "氦氣密度極小且為鈍氣不可燃，比氫氣安全。" }
+                ]
+            },
+            {
+                id: 'u3_3', book: 'b3', category: 'physics', semester: '國二上・第 3 冊', num: '單元 3-3', title: '波動與聲音的傳播', icon: '🔊', themeColor: 'blue',
+                desc: '橫波與縱波、波速公式 v=fλ、聲音三要素（響度/音調/音色）與回聲測距。', tags: ['連續正弦波', '音叉共振', '聲速與回聲'],
+                concepts: [
+                    { title: '波速公式', content: '波速 $v = \\frac{\\lambda}{T} = f \\lambda$。波傳播時只傳播能量與擾動，介質質點只在原地附近振動，不隨波移動！' },
+                    { title: '聲音三要素', content: '1. 響度：由振幅決定 (分貝 dB)；2. 音調：由頻率決定 (赫茲 Hz)；3. 音色：由波形決定。' },
+                    { title: '聲速與氣溫', content: '聲速 $v = 331 + 0.6T\\text{ (m/s)}$。固體 > 液體 > 氣體，真空無法傳遞聲音。' }
+                ],
+                calcType: 'wave_sound',
+                quiz: [
+                    { q: "波動傳播時，下列何者會隨波前進？", opts: ["介質質點", "能量", "水分分子", "介質全部物質"], ans: 1, exp: "波只傳遞能量與擾動，介質質點只在原地振動。" },
+                    { q: "聲波在空氣中的傳播屬於何種波？", opts: ["橫波", "縱波 (疏密波)", "電磁波", "表面波"], ans: 1, exp: "聲波振動方向與傳播方向平行，屬於縱波。" },
+                    { q: "聲音在下列哪種介質中傳播速率最快？", opts: ["空氣", "純水", "鋼鐵", "真空"], ans: 2, exp: "聲速：固體 > 液體 > 氣體 (真空不傳聲)。" },
+                    { q: "吉他弦若要發出較高音調，應如何調整？", opts: ["換成較粗的弦", "將弦調得更緊", "將弦放鬆", "增加弦的長度"], ans: 1, exp: "輕、薄、短、細、緊的弦振動頻率高，音調高。" },
+                    { q: "氣溫 15°C 時，乾燥空氣中的聲速約為？", opts: ["300 m/s", "340 m/s", "1500 m/s", "300000 km/s"], ans: 1, exp: "v = 331 + 0.6 × 15 = 340 m/s。" },
+                    { q: "聲納發射超聲波經 4 秒收到回聲 (海中聲速 1500 m/s)，海底深度為？", opts: ["1500 m", "3000 m", "6000 m", "750 m"], ans: 1, exp: "S = (1500 × 4) / 2 = 3000 m。" },
+                    { q: "能辨別鋼琴和小提琴彈奏同一個音階，是因為兩者何者不同？", opts: ["響度", "音調", "音色 (波形)", "聲速"], ans: 2, exp: "不同樂器發音體結構不同，產生的波形不同故音色不同。" },
+                    { q: "人耳能聽見的正常聲音頻率範圍約為？", opts: ["0 ~ 100 Hz", "20 ~ 20000 Hz", "20000 Hz 以上", "任何頻率皆可"], ans: 1, exp: "人耳聽覺極限約為 20 Hz ~ 20,000 Hz。" },
+                    { q: "聲音響度每增加 10 分貝 (dB)，聲音能量強度增為原本的幾倍？", opts: ["2 倍", "10 倍", "20 倍", "100 倍"], ans: 1, exp: "分貝為對數尺度，每增加 10 dB 能量增為 10 倍。" },
+                    { q: "原聲傳到障礙物反射產生回聲，回聲與原聲相比何者改變？", opts: ["聲速變慢", "頻率變低", "振幅變小(能量消耗)", "波長變短"], ans: 2, exp: "同介質聲速與頻率不變，但能量衰減故振幅變小。" }
+                ]
+            },
+            {
+                id: 'u3_4', book: 'b3', category: 'physics', semester: '國二上・第 3 冊', num: '單元 3-4', title: '光、色彩與影像', icon: '🌈', themeColor: 'amber',
+                desc: '光的直線傳播、針孔成像、平面鏡反射、折射定律與透鏡 6 大成像光具座。', tags: ['針孔相機', '透鏡光具座', '色光三原色'],
+                concepts: [
+                    { title: '光的直線傳播與針孔成像', content: '光在同種均勻介質中沿直線傳播。針孔成像成「倒立實像」，像的大小由物距與像距比值決定。' },
+                    { title: '反射定律與平面鏡', content: '入射角等於反射角 ($\\angle i = \\angle r$)。平面鏡成「正立等大虛像」，物距等於像距。' },
+                    { title: '凸透鏡 6 大成像規律', content: '物在 2f 外成倒立縮小實像 (相機)；物在 2f 上成倒立等大實像；物在 f~2f 成倒立放大實像 (投影機)；物在 f 內成正立放大虛像 (放大鏡)。' }
+                ],
+                calcType: 'optics',
+                quiz: [
+                    { q: "針孔相機在紙屏上所成的像為？", opts: ["正立放大虛像", "倒立縮小虛像", "倒立實像", "正立等大實像"], ans: 2, exp: "針孔成像為光線實際會聚形成的倒立實像。" },
+                    { q: "人站在平面鏡前 2 公尺處，人與鏡中像的距離為？", opts: ["1 公尺", "2 公尺", "4 公尺", "8 公尺"], ans: 2, exp: "物距 = 像距 = 2m，故人與像相距 2 + 2 = 4m。" },
+                    { q: "光由空氣斜射入水中時，折射光線會？", opts: ["偏向法線", "偏離法線", "不發生偏折", "完全沿原路折回"], ans: 0, exp: "光由快介質入慢介質，折射光偏向法線 (入射角 > 折射角)。" },
+                    { q: "照相機鏡頭使用的是凸透鏡，底片上所成的像為？", opts: ["倒立縮小實像", "正立放大虛像", "倒立放大實像", "正立等大虛像"], ans: 0, exp: "物在 2f 外，底片成倒立縮小實像。" },
+                    { q: "使用放大鏡觀察郵票時，郵票應放在凸透鏡的哪裡？", opts: ["2f 外", "2f 上", "f ~ 2f 間", "焦點 f 內"], ans: 3, exp: "物在焦點內成正立放大虛像。" },
+                    { q: "近視眼鏡的鏡片是哪一種透鏡？", opts: ["凸透鏡", "凹透鏡", "平面鏡", "雙凸透鏡"], ans: 1, exp: "近視眼球過長成像於視網膜前，需用凹透鏡發散光線矯正。" },
+                    { q: "色光三原色是指哪三種顏色？", opts: ["紅、黃、藍", "紅、綠、藍", "紅、白、黑", "黃、綠、藍"], ans: 1, exp: "光的三原色為紅 (R)、綠 (G)、藍 (B)。" },
+                    { q: "筷子斜插在水杯中看起來往上折斷變淺，是因為？", opts: ["光的反射", "光的折射", "光的散射", "光的全反射"], ans: 1, exp: "水中光線折射出空氣偏離法線，使眼睛看到的虛像比實際位置淺。" },
+                    { q: "太陽光通過三稜鏡會分散成七彩光譜，稱為？", opts: ["光的色散", "光的直線傳播", "光的反射", "光的干涉"], ans: 0, exp: "各色光在玻璃中折射率不同而分散，稱為色散現象。" },
+                    { q: "凹透鏡不論物體放在何處，所成的像永遠是？", opts: ["正立放大虛像", "正立縮小虛像", "倒立縮小實像", "倒立放大實像"], ans: 1, exp: "凹透鏡對光線有發散作用，永遠成正立縮小虛像。" }
+                ]
+            },
+            {
+                id: 'u3_5', book: 'b3', category: 'physics', semester: '國二上・第 3 冊', num: '單元 3-5', title: '溫度與熱量', icon: '🔥', themeColor: 'rose',
+                desc: '溫標換算、熱量公式 H=msΔT、比熱升溫對決、熱平衡與熱傳播（傳導/對流/輻射）。', tags: ['溫標換算', '比熱曲線圖', '熱平衡計算'],
+                concepts: [
+                    { title: '溫標換算公式', content: '攝氏與華氏換算：$^\circ\\text{F} = \\frac{9}{5}^\circ\\text{C} + 32$。水的冰點為 $0^\circ\\text{C} = 32^\circ\\text{F}$，沸點為 $100^\circ\\text{C} = 212^\circ\\text{F}$。' },
+                    { title: '熱量與比熱', content: '熱量 $H = m \\cdot s \\cdot \\Delta T$。比熱大者難熱難冷（水 $s=1.0$）；比熱小者易熱易冷（金屬）。' },
+                    { title: '熱傳播三大方式', content: '1. 傳導：固體主要傳熱方式；2. 對流：流體（液體/氣體）受熱膨脹上升；3. 輻射：不需介質，可在真空中傳播（如太陽熱）。' }
+                ],
+                calcType: 'heat_thermo',
+                quiz: [
+                    { q: "氣溫為 20°C 時，換算為華氏溫度應為多少？", opts: ["36°F", "52°F", "68°F", "80°F"], ans: 2, exp: "F = (20 × 9/5) + 32 = 36 + 32 = 68°F。" },
+                    { q: "將 100g 的水由 20°C 加熱至 50°C，水吸收了多少卡熱量？", opts: ["300 cal", "3000 cal", "5000 cal", "2000 cal"], ans: 1, exp: "H = 100 × 1.0 × (50 - 20) = 3000 cal。" },
+                    { q: "沿海地區晝夜溫差通常比沙漠地區小，主要原因為？", opts: ["水的比熱大", "水的密度大", "砂石比熱大", "空氣對流慢"], ans: 0, exp: "水的比熱很大 (1.0 cal/g°C)，吸收或釋放熱量時溫度變化小。" },
+                    { q: "等質量的鐵 (s=0.11) 與水 (s=1.0) 吸收相同熱量，何者升溫較多？", opts: ["水", "鐵", "一樣多", "無法比較"], ans: 1, exp: "比熱小者溫度變化大，鐵升溫快且多。" },
+                    { q: "冷氣機通常安裝在房間上方，主要是利用哪種熱傳播方式？", opts: ["熱傳導", "熱對流", "熱輻射", "熱昇華"], ans: 1, exp: "冷空氣密度大下沉，形成對流循環。" },
+                    { q: "太陽的熱量能穿透真空傳到地球，是依靠哪種傳播方式？", opts: ["傳導", "對流", "輻射", "蒸發"], ans: 2, exp: "熱輻射不需介質即可在真空中傳播。" },
+                    { q: "保溫瓶內膽鍍銀的主要目的為？", opts: ["防止熱傳導", "防止熱對流", "反射熱輻射減少散失", "增加堅固度"], ans: 2, exp: "銀面能反射熱輻射，減少熱散失。" },
+                    { q: "50g、80°C 熱水與 50g、20°C 冷水混合（不計熱散失），平衡溫度為？", opts: ["40°C", "50°C", "60°C", "70°C"], ans: 1, exp: "等質量混合，平衡溫度 = (80 + 20) / 2 = 50°C。" },
+                    { q: "熱量傳遞的自然方向為？", opts: ["熱量多的流向熱量少", "溫度高的流向溫度低", "比熱大的流向比熱小", "質量大的流向質量小"], ans: 1, exp: "熱量自發由高溫流向低溫，直到達到熱平衡。" },
+                    { q: "用手摸鐵桌比木桌感覺更冰冷，是因為？", opts: ["鐵桌溫度較低", "鐵是熱良導體，迅速吸走手部熱量", "木桌比熱大", "木桌會發熱"], ans: 1, exp: "兩者同處室溫，但鐵傳導快，使手迅速降溫感到冰冷。" }
+                ]
+            },
+            {
+                id: 'u3_6', book: 'b3', category: 'chemistry', semester: '國二上・第 3 冊', num: '單元 3-6', title: '物質結構與元素週期表', icon: '⚛️', themeColor: 'purple',
+                desc: '原子結構（質子/中子/電子）、原子序與質量數、週期表族群規律與分子式。', tags: ['原子結構模型', '週期表速查', '化學式書寫'],
+                concepts: [
+                    { title: '原子結構', content: '原子核內有帶正電的「質子」與不帶電的「中子」，核外有帶負電的「電子」。原子序 = 質子數 = 電子數（電中性時）。質量數 = 質子數 + 中子數。' },
+                    { title: '週期表規律', content: '依「原子序」由小到大排列。同一「族」（縱欄）的最外層電子數相同，化學性質相似（如第1族鹼金屬、第17族鹵素、第18族鈍氣）。' }
+                ],
+                calcType: 'atom_periodic',
+                quiz: [
+                    { q: "原子核中帶正電的粒子是？", opts: ["質子", "中子", "電子", "光子"], ans: 0, exp: "質子帶正電，中子不帶電，電子帶負電。" },
+                    { q: "原子的「原子序」是指該原子核內的什麼數目？", opts: ["中子數", "質子數", "質量數", "電子與中子總數"], ans: 1, exp: "原子序即為原子核內的質子數目。" },
+                    { q: "某中性原子的質量數為 23，原子序為 11，則其中子數為？", opts: ["11", "12", "23", "34"], ans: 1, exp: "中子數 = 質量數 - 原子序 = 23 - 11 = 12。" },
+                    { q: "元素週期表中，決定元素化學性質最相似的是處於同一個？", opts: ["週期 (橫列)", "族 (縱欄)", "原子量區間", "密度區間"], ans: 1, exp: "同族元素具有相同的最外層價電子數，化學性質相似。" },
+                    { q: "週期表第 1 族金屬（如鈉、鉀）活性極大，儲存時通常浸泡於？", opts: ["純水中", "酒精中", "礦物油或煤油中", "食鹽水中"], ans: 2, exp: "鹼金屬與水或氧劇烈反應，需隔絕空氣儲存於煤油或礦物油中。" },
+                    { q: "下列哪一種元素屬於「鈍氣（稀有氣體）」？", opts: ["氯 (Cl)", "氬 (Ar)", "鈉 (Na)", "氧 (O)"], ans: 1, exp: "氬 (Ar) 位於第 18 族，最外層電子填滿，性質極安定。" },
+                    { q: "下列化學式何者表示「氫氧化鈉」？", opts: ["NaCl", "NaOH", "HCl", "CaCO₃"], ans: 1, exp: "NaOH 為氫氧化鈉之化學式。" },
+                    { q: "原子的質量幾乎全部集中在何處？", opts: ["核外電子", "原子核 (質子與中子)", "核外軌道", "均勻分布在整個原子"], ans: 1, exp: "電子質量極小（約為質子的 1/1836），原子質量集中於原子核。" },
+                    { q: "水分子 ($H_2O$) 中氫原子與氧原子的個數比為？", opts: ["1 : 1", "2 : 1", "1 : 2", "2 : 2"], ans: 1, exp: "H₂O 由 2 個氫原子與 1 個氧原子組成。" },
+                    { q: "下列哪一組元素屬於同族的鹵素？", opts: ["鈉、鉀", "氟、氯", "氦、氖", "鎂、鈣"], ans: 1, exp: "氟 (F)、氯 (Cl)、溴 (Br)、碘 (I) 為第 17 族鹵素。" }
+                ]
+            },
+
+            // ==================== 國二下 (第4冊 理化) ====================
+            {
+                id: 'u4_1', book: 'b4', category: 'chemistry', semester: '國二下・第 4 冊', num: '單元 4-1', title: '化學反應與莫耳數', icon: '⚗️', themeColor: 'emerald',
+                desc: '質量守恆定律、原子量與莫耳數換算 (n=m/M)、化學反應式平衡與計量。', tags: ['莫耳數換算', '反應式平衡', '化學計量'],
+                concepts: [
+                    { title: '莫耳數定義', content: '$1\\text{ 莫耳} = 6 \\times 10^{23}\\text{ 個粒子}$。莫耳數 $n = \\frac{\\text{質量 (g)}}{\\text{原子量或分子量}}$。' },
+                    { title: '質量守恆定律', content: '化學反應前後，原子的種類與個數不變，反應前總質量必等於反應後總質量。' },
+                    { title: '反應式係數比', content: '化學反應式中各物質係數比 = 莫耳數比 = 分子個數比（$\\neq$ 質量比）。' }
+                ],
+                calcType: 'mole_calc',
+                quiz: [
+                    { q: "1 莫耳的水 ($H_2O$, 分子量 18) 質量為多少公克？", opts: ["1g", "18g", "36g", "6 × 10²³ g"], ans: 1, exp: "1 莫耳物質的質量等於其分子量公克數，即 18g。" },
+                    { q: "36 公克的水中含有多少莫耳的水分子？", opts: ["1 莫耳", "2 莫耳", "18 莫耳", "36 莫耳"], ans: 1, exp: "莫耳數 n = 36 / 18 = 2 莫耳。" },
+                    { q: "化學反應遵守質量守恆定律的根本原因為？", opts: ["分子的種類不變", "原子的種類與數目在反應前後不變", "質量轉化為能量", "體積保持不變"], ans: 1, exp: "化學反應只是原子重新排列組合，原子種類與總數不變。" },
+                    { q: "反應式 $2H_2 + O_2 \\rightarrow 2H_2O$ 中，係數比代表何者的比值？", opts: ["質量比", "莫耳數比", "密度比", "原子量比"], ans: 1, exp: "化學反應式係數比代表反應的分子數比與莫耳數比。" },
+                    { q: "4 公克的氫氣 ($H_2$, 分子量 2) 與足量氧氣反應，可產生多少莫耳水？", opts: ["1 莫耳", "2 莫耳", "4 莫耳", "18 莫耳"], ans: 1, exp: "H₂ 莫耳數 = 4/2 = 2 莫耳，依 2:2 比例產生 2 莫耳 H₂O。" },
+                    { q: "木材在開放空間燃燒後灰燼變輕，是因為？", opts: ["不遵守質量守恆", "生成二氧化碳與水蒸氣散逸到空氣中", "原子被破壞消失", "質量消失"], ans: 1, exp: "產生的氣體散逸入大氣，若在密閉容器中測量總質量守恆。" },
+                    { q: "碳的原子量為 12，則 6 公克的碳含有多少個碳原子？", opts: ["3 × 10²³ 個", "6 × 10²³ 個", "1.2 × 10²⁴ 個", "0.5 個"], ans: 0, exp: "6g 為 0.5 莫耳，個數 = 0.5 × 6 × 10²³ = 3 × 10²³ 個。" },
+                    { q: "平衡反應式：$a\\text{CH}_4 + b\\text{O}_2 \\rightarrow c\\text{CO}_2 + d\\text{H}_2O$，係數最簡整數比 $a+b+c+d$ 為？", opts: ["5", "6", "7", "8"], ans: 1, exp: "CH₄ + 2O₂ → CO₂ + 2H₂O，係數 1+2+1+2 = 6。" },
+                    { q: "二氧化碳 ($CO_2$, 分子量 44) 88 公克，含有多少個氧原子？", opts: ["2 個", "2 莫耳", "4 莫耳 (2.4 × 10²⁴ 個)", "44 個"], ans: 2, exp: "CO₂ 莫耳數 = 88/44 = 2 莫耳，每個 CO₂ 含 2 個 O，故含 4 莫耳氧原子。" },
+                    { q: "密閉容器內 10g 碳酸鈣與 10g 稀鹽酸反應生成二氧化碳，反應後容器總質量？", opts: ["大於 20g", "小於 20g", "恰等於 20g", "視溫度而定"], ans: 2, exp: "密閉容器無物質逸散，總質量嚴格守恆等於 20g。" }
+                ]
+            },
+            {
+                id: 'u4_2', book: 'b4', category: 'chemistry', semester: '國二下・第 4 冊', num: '單元 4-2', title: '氧化與還原反應', icon: '🛡️', themeColor: 'teal',
+                desc: '金屬活性序列、燃燒與氧化反應、高爐煉鐵、氧化劑與還原劑判定。', tags: ['活性序列', '氧化還原判定', '高爐煉鐵'],
+                concepts: [
+                    { title: '金屬活性序列', content: '$\\text{K > Na > Ca > Mg > Al > Zn > Fe > Pb > H > Cu > Hg > Ag > Pt > Au}$。活性大者對氧結合力大，易被氧化，是強還原劑。' },
+                    { title: '氧化與還原', content: '得到氧的反應稱為「氧化」（自身為還原劑）；失去氧的反應稱為「還原」（自身為氧化劑）。兩者必同時發生。' }
+                ],
+                calcType: 'redox',
+                quiz: [
+                    { q: "在金屬活性序列中，下列何者對氧的活性最大？", opts: ["金 (Au)", "鐵 (Fe)", "鎂 (Mg)", "銅 (Cu)"], ans: 2, exp: "活性序列：Mg > Fe > Cu > Au，鎂對氧結合力最強。" },
+                    { q: "反應：$2\\text{CuO} + \\text{C} \\rightarrow 2\\text{Cu} + \\text{CO}_2$ 中，何者被「氧化」？", opts: ["CuO", "C", "Cu", "CO₂"], ans: 1, exp: "碳 (C) 得到氧生成 CO₂，發生氧化反應。" },
+                    { q: "承上題，何者是「氧化劑」？", opts: ["CuO", "C", "Cu", "CO₂"], ans: 0, exp: "氧化銅 (CuO) 提供氧使別人氧化，自身被還原，為氧化劑。" },
+                    { q: "高爐煉鐵中，加入「焦炭 (C)」的主要功能是？", opts: ["催化劑", "將鐵礦還原的還原劑與燃料", "助熔劑", "吸水劑"], ans: 1, exp: "焦炭燃燒提供熱量並生成 CO 將鐵礦還原出鐵。" },
+                    { q: "下列哪一種金屬在空氣中燃燒會發出極耀眼的白光？", opts: ["銅片", "金箔", "鎂帶", "鉛塊"], ans: 2, exp: "鎂劇烈燃燒生成白色氧化鎂 (MgO)，發出強烈白光。" },
+                    { q: "下列哪一種金屬表面會生成緻密的氧化層，防止內部繼續生鏽？", opts: ["鐵", "鋁", "鈉", "鉀"], ans: 1, exp: "鋁表面氧化鋁 (Al₂O₃) 薄膜緻密，具保護內部作用。" },
+                    { q: "將鋅片放入硫酸銅溶液中，下列敘述何者正確？", opts: ["無反應發生", "析出紅色的銅，溶液藍色變淡", "析出鋅", "產生氫氣氣泡"], ans: 1, exp: "活性 Zn > Cu，鋅將銅離子置換還原析出紅色的銅。" },
+                    { q: "日常生活中的「暖暖包」發熱原理是利用鐵粉的什麼反應？", opts: ["劇烈燃燒", "緩慢氧化放熱", "吸熱還原", "溶解吸熱"], ans: 1, exp: "鐵粉與空氣中的氧氣和水緩慢氧化釋放熱量。" },
+                    { q: "下列哪一種物質「不能」與氧氣反應？", opts: ["氫氣", "一氧化碳", "二氧化碳", "甲烷"], ans: 2, exp: "二氧化碳中碳已達最高氧化態，不可燃亦不助燃。" },
+                    { q: "食品包裝內的「脫氧劑」主要成分通常是？", opts: ["乾燥劑石灰", "鐵粉", "食鹽", "活性碳"], ans: 1, exp: "鐵粉吸收包裝內的氧氣生鏽，以達防霉保鮮效果。" }
+                ]
+            },
+            {
+                id: 'u4_3', book: 'b4', category: 'chemistry', semester: '國二下・第 4 冊', num: '單元 4-3', title: '電解質與酸鹼鹽', icon: '🧪', themeColor: 'green',
+                desc: '電解質解離說、常見酸鹼性質、pH值與指示劑、酸鹼中和與滴定計算。', tags: ['pH色彩盤', '解離說', '酸鹼中和滴定'],
+                concepts: [
+                    { title: '電解質定義', content: '溶於水能解離出陰陽離子而導電的化合物（酸、鹼、鹽）。水溶液中陽離子總正電量必等於陰離子總負電量（電中性）。' },
+                    { title: 'pH 值與指示劑', content: '常溫下：$\\text{pH} < 7$ 為酸性，$\\text{pH} = 7$ 為中性，$\\text{pH} > 7$ 為鹼性。石蕊試紙：酸紅鹼藍；酚酞：酸無鹼紅。' },
+                    { title: '酸鹼中和', content: '$\\text{酸} + \\text{鹼} \\rightarrow \\text{鹽} + \\text{水} + \\text{熱}$ (必放熱反應)。淨離子反應式：$H^+ + OH^- \\rightarrow H_2O$。' }
+                ],
+                calcType: 'acid_base',
+                quiz: [
+                    { q: "下列何者溶於水「不能」導電，屬於非電解質？", opts: ["食鹽 (NaCl)", "硫酸 (H₂SO₄)", "蔗糖 (C₁₂H₂₂O₁₁)", "氫氧化鈉 (NaOH)"], ans: 2, exp: "蔗糖為有機非電解質，溶於水以分子狀態存在不解離。" },
+                    { q: "常溫下，pH = 3 的水溶液性質為？", opts: ["強鹼性", "弱鹼性", "中性", "酸性"], ans: 3, exp: "pH < 7 為酸性。" },
+                    { q: "在氫氧化鈉水溶液中滴入酚酞指示劑，溶液顏色呈現？", opts: ["無色", "紅色", "藍色", "黃色"], ans: 1, exp: "酚酞遇鹼性呈紅色，遇酸性與中性為無色。" },
+                    { q: "酸與活性金屬（如鋅、鎂）反應會產生何種氣體？", opts: ["氧氣", "氫氣", "二氧化碳", "氯氣"], ans: 1, exp: "金屬與酸反應置換產生氫氣 (H₂)。" },
+                    { q: "鹽酸與碳酸鈣反應會產生何種氣體？", opts: ["氫氣", "氧氣", "二氧化碳", "二氧化硫"], ans: 2, exp: "碳酸鹽遇酸產生二氧化碳 (CO₂) 氣體。" },
+                    { q: "酸鹼中和反應屬於？", opts: ["吸熱反應", "放熱反應", "不吸熱亦不放熱", "視酸的強弱而定"], ans: 1, exp: "H⁺ + OH⁻ → H₂O 生成水分子必放出熱量。" },
+                    { q: "工業上常稱為「王水」的強酸混合物是由哪兩種酸組成？", opts: ["硫酸與鹽酸", "硝酸與鹽酸 (體積比 1:3)", "醋酸與硫酸", "碳酸與硝酸"], ans: 1, exp: "濃硝酸與濃鹽酸以體積比 1:3 混合為王水，可溶解金與鉑。" },
+                    { q: "被紅火蟻或蜜蜂叮咬（蟻酸），可塗抹下列何種微鹼性物質緩解？", opts: ["檸檬汁", "食醋", "稀氨水或小蘇打水", "濃硫酸"], ans: 2, exp: "弱鹼性小蘇打或氨水可酸鹼中和減輕疼痛。" },
+                    { q: "硫酸溶液中，陽離子個數與陰離子個數比為？", opts: ["1 : 1", "2 : 1", "1 : 2", "2 : 2"], ans: 1, exp: "H₂SO₄ → 2H⁺ + SO₄²⁻，2 個 H⁺ 對應 1 個 SO₄²⁻。" },
+                    { q: "胃酸過多時常服用的胃藥（制酸劑）主要成分通常是？", opts: ["強鹼氫氧化鈉", "弱鹼如碳酸氫鈉或氫氧化鎂", "強酸鹽酸", "食鹽"], ans: 1, exp: "胃藥多含弱鹼性氫氧化鎂、碳酸氫鈉以溫和中和胃酸。" }
+                ]
+            },
+            {
+                id: 'u4_4', book: 'b4', category: 'chemistry', semester: '國二下・第 4 冊', num: '單元 4-4', title: '反應速率與化學平衡', icon: '⚡', themeColor: 'cyan',
+                desc: '碰撞學說、影響反應速率 5 大因素（濃度/溫度/催化劑/表面積）、可逆反應與化學平衡。', tags: ['反應速率調控', '勒沙特列原理', '化學平衡移動'],
+                concepts: [
+                    { title: '影響反應速率因素', content: '1. 本性；2. 濃度/壓力（有效碰撞頻率增加）；3. 溫度（分子能量增加）；4. 接觸表面積（顆粒愈細愈快）；5. 催化劑（降低活化能）。' },
+                    { title: '化學平衡條件', content: '在密閉系統中，正反應速率等於逆反應速率時達到動態平衡。改變濃度或溫度可使平衡移動。' }
+                ],
+                calcType: 'reaction_rate',
+                quiz: [
+                    { q: "烤肉時將木炭敲碎更容易點燃，主要原因是改變了？", opts: ["溫度", "濃度", "催化劑", "接觸表面積"], ans: 3, exp: "敲碎木炭大幅增加與氧氣的接觸表面積，加快燃燒速率。" },
+                    { q: "食物放進冰箱冷藏能減緩腐敗，是因為降低了何者？", opts: ["溫度", "濃度", "壓力", "表面積"], ans: 0, exp: "降溫使分子動能降低，化學反應速率減慢。" },
+                    { q: "催化劑在化學反應中的主要功能為？", opts: ["增加生成物總量", "改變反應途徑加快反應速率", "提高反應溫度", "消耗自身作為反應物"], ans: 1, exp: "催化劑能改變反應路徑降低活化能以加速反應，本身質量與性質不變。" },
+                    { q: "雙氧水分解實驗中，加入二氧化錳後產生的氣體總量會？", opts: ["增加", "減少", "保持不變，但產生速度加快", "變為二氧化碳"], ans: 2, exp: "催化劑只加快生成速率，不改變最終生成物總質量。" },
+                    { q: "化學反應達到「平衡狀態」時，下列敘述何者正確？", opts: ["反應物完全耗盡", "正反應速率等於逆反應速率", "反應物濃度等於生成物濃度", "分子停止運動"], ans: 1, exp: "化學平衡為動態平衡，正逆反應速率相等。" },
+                    { q: "反應 $N_2O_4 \\text{ (無色)} + \\text{熱} \\rightleftharpoons 2NO_2 \\text{ (紅棕色)}$，將容器加熱時顏色會？", opts: ["變淺(無色)", "變深(紅棕色)", "保持不變", "先變淺後消失"], ans: 1, exp: "加熱吸熱反應向右移動，紅棕色 NO₂ 增加，顏色變深。" },
+                    { q: "下列哪一種反應屬於不可逆的單向反應？", opts: ["開放空間中木材燃燒", "密閉容器中水與水蒸氣平衡", "密閉中紅棕色與無色氣體轉換", "飽和溶液溶質溶解與結晶"], ans: 0, exp: "開放燃燒生成氣體散逸，無法逆向變回木材。" },
+                    { q: "工業上合成氨：$N_2 + 3H_2 \\rightleftharpoons 2NH_3$，增加壓力會使平衡向哪方移動？", opts: ["向左 (氣體係數大端)", "向右 (氣體係數小端)", "不移動", "無法預測"], ans: 1, exp: "加壓使平衡朝氣體分子莫耳數較少的一端（右側 2 分子）移動。" },
+                    { q: "下列哪一種物質燃燒時「不能」藉由吹氣增加氧氣濃度來助燃？", opts: ["木炭", "蠟燭", "煤氣", "金箔"], ans: 3, exp: "金活性極小，無法燃燒。" },
+                    { q: "在硫代硫酸鈉與鹽酸反應實驗中，以遮住十字記號所需時間代表？", opts: ["反應進行程度與速率的反比", "溫度大小", "濃度大小", "沉澱物質量"], ans: 0, exp: "時間 t 愈短，代表反應速率 (1/t) 愈快。" }
+                ]
+            },
+            {
+                id: 'u4_5', book: 'b4', category: 'chemistry', semester: '國二下・第 4 冊', num: '單元 4-5', title: '有機化合物與生活化學', icon: '🧴', themeColor: 'amber',
+                desc: '有機物與無機物判定、烴類、醇酸酯、皂化反應與清潔原理、聚合物與塑膠。', tags: ['有機物分類', '皂化反應實驗', '聚合物熱塑性'],
+                concepts: [
+                    { title: '有機化合物定義', content: '含有碳元素的化合物稱為有機化合物（但 CO, CO₂, 碳酸鹽, 氰化物除外）。' },
+                    { title: '常見有機物官能基', content: '1. 烴類 (CH)；2. 醇類 (-OH，如乙醇)；3. 有機酸 (-COOH，如乙酸)；4. 酯類 (香味，醇+酸 $\\rightarrow$ 酯+水)。' },
+                    { title: '皂化反應', content: '油脂 + 氫氧化鈉 $\\rightarrow$ 肥皂 + 甘油。加入飽和食鹽水進行「鹽析」使肥皂浮於上層。' }
+                ],
+                calcType: 'organic',
+                quiz: [
+                    { q: "下列哪一種化合物「不屬於」有機化合物？", opts: ["甲烷 (CH₄)", "酒精 (C₂H₅OH)", "二氧化碳 (CO₂)", "蔗糖 (C₁₂H₂₂O₁₁)"], ans: 2, exp: "CO、CO₂、碳酸鹽、氰化物習慣上歸為無機化合物。" },
+                    { q: "天然氣的主要成分為下列何者？", opts: ["甲烷 (CH₄)", "丙烷 (C₃H₈)", "丁烷 (C₄H₁₀)", "氫氣 (H₂)"], ans: 0, exp: "天然氣主要成分為甲烷；桶裝瓦斯主要成分為丙烷與丁烷。" },
+                    { q: "酒類發酵產生的酒精，其化學名稱與分子式為？", opts: ["甲醇 (CH₃OH)", "乙醇 (C₂H₅OH)", "乙酸 (CH₃COOH)", "丙酮 (CH₃COCH₃)"], ans: 1, exp: "酒精化學名為乙醇，甲醇有劇毒會導致失明。" },
+                    { q: "酯化反應是由哪兩種有機化合物在濃硫酸催化下反應生成？", opts: ["烷類與烯類", "有機酸與醇類", "醛類與醚類", "油脂與強鹼"], ans: 1, exp: "有機酸 + 醇類 → 酯類 (具水果香味) + 水。" },
+                    { q: "製造肥皂的「皂化反應」反應物為？", opts: ["油脂與氫氧化鈉", "酒精與乙酸", "鹽酸與石灰", "甘油與食鹽"], ans: 0, exp: "油脂 + 強鹼 (NaOH) → 脂肪酸鈉 (肥皂) + 丙三醇 (甘油)。" },
+                    { q: "皂化完成後加入飽和食鹽水，肥皂會浮在上層分離出來，此步驟稱為？", opts: ["過濾", "蒸餾", "鹽析", "發酵"], ans: 2, exp: "利用肥皂不溶於飽和食鹽水且密度較小上浮分離，稱為鹽析。" },
+                    { q: "肥皂分子去污原理中，親油端與親水端分別為？", opts: ["長碳鏈為親油端，離子端為親水端", "長碳鏈為親水端，離子端為親油端", "兩端皆為親水端", "兩端皆為親油端"], ans: 0, exp: "長碳氫鏈與油污結合 (親油端)，帶電荷頭端與水結合 (親水端)。" },
+                    { q: "下列何者屬於「熱塑性聚合物」（加熱可熔化回收重塑）？", opts: ["寶特瓶 (PET)", "輪胎橡膠", "環氧樹脂", "電木開關"], ans: 0, exp: "鏈狀結構的 PET、PE、PVC 為熱塑性塑膠。" },
+                    { q: "下列哪一種天然物質「不是」由葡萄糖聚合而成的高分子？", opts: ["澱粉", "纖維素", "肝醣", "蛋白質"], ans: 3, exp: "蛋白質是由「胺基酸」聚合而成。" },
+                    { q: "工業上常用於消毒殺菌的 75% 酒精，主要殺菌機制為？", opts: ["破壞細菌細胞壁並使蛋白質凝固變性", "氧化漂白", "使水沸騰", "提供營養"], ans: 0, exp: "75% 酒精滲透力最適中，能有效使蛋白質變性達到殺菌效果。" }
+                ]
+            },
+            {
+                id: 'u4_6', book: 'b4', category: 'physics', semester: '國二下・第 4 冊', num: '單元 4-6', title: '常見的力、壓力與浮力', icon: '🚢', themeColor: 'blue',
+                desc: '力的合成與平衡、虎克定律彈簧秤、液體壓力與大氣壓力、阿基米德浮力原理。', tags: ['虎克定律', '液體壓力計算', '阿基米德浮力'],
+                concepts: [
+                    { title: '虎克定律', content: '在彈性限度內，彈簧伸長量與所受外力成正比：$F = k \\cdot \\Delta x$。' },
+                    { title: '液體壓力公式', content: '靜止液體壓力 $P = h \\cdot D$ (深度 $\\times$ 液體密度)。各方向壓力相等且垂直於接觸面。' },
+                    { title: '阿基米德浮力原理', content: '物體在流體中所受浮力等於所排開流體的重量：$B = V_{\\text{排開}} \\times D_{\\text{液體}}$。' }
+                ],
+                calcType: 'force_buoyancy',
+                quiz: [
+                    { q: "彈簧原長 10cm，掛 20g 砝碼時全長 14cm。若改掛 50g 砝碼（在彈性限度內），全長為？", opts: ["15 cm", "20 cm", "25 cm", "30 cm"], ans: 1, exp: "20g 伸長 4cm (每 10g 伸長 2cm)，50g 伸長 10cm，全長 = 10 + 10 = 20cm。" },
+                    { q: "在水深 50 cm 處，水所產生的液體向下壓力為多少 gw/cm²？", opts: ["5 gw/cm²", "50 gw/cm²", "500 gw/cm²", "1 gw/cm²"], ans: 1, exp: "P = h × D = 50 cm × 1.0 g/cm³ = 50 gw/cm²。" },
+                    { q: "托里切利實驗中，1 大氣壓 (1 atm) 約可支撐多少公分高的水銀柱？", opts: ["10 公分", "76 公分", "100 公分", "760 公分"], ans: 1, exp: "1 atm = 76 cm-Hg = 1033.6 gw/cm² = 1013 hPa。" },
+                    { q: "將體積 100 cm³ 的金屬塊完全浸沒於純水中，金屬塊所受浮力為？", opts: ["50 gw", "100 gw", "200 gw", "與金屬密度有關"], ans: 1, exp: "B = V排 × D液 = 100 × 1.0 = 100 gw。" },
+                    { q: "一艘輪船由淡水河駛入海水中（海水密度較大），船身浮沉情況為？", opts: ["沉下一點", "上浮一點", "完全不變", "沉入海底"], ans: 1, exp: "浮體浮力 = 船重 (不變)，因海水密度大，排開體積變小故船身上浮。" },
+                    { q: "質量 200g 的木塊浮在水面上靜止，木塊所受浮力為多少 gw？", opts: ["100 gw", "200 gw", "250 gw", "0 gw"], ans: 1, exp: "靜止浮體浮力等於物體重量，即 200 gw。" },
+                    { q: "將同一顆雞蛋放入清水中沉底，加入食鹽溶解後雞蛋浮起，是因為？", opts: ["雞蛋質量變輕", "食鹽水密度增加，使浮力增大", "水溫上升", "大氣壓力增加"], ans: 1, exp: "鹽水密度大於清水，雞蛋排開鹽水重量超過蛋重而浮起。" },
+                    { q: "吸管能將飲料吸入口中，主要原理是利用？", opts: ["大氣壓力", "毛細現象", "連通管原理", "液體壓力"], ans: 0, exp: "吸氣使吸管內氣壓變小，外界大氣壓力將飲料壓入管中。" },
+                    { q: "茶壺壺嘴與壺身高度相同，是利用何種原理？", opts: ["帕斯卡原理", "連通管原理", "阿基米德原理", "虎克定律"], ans: 1, exp: "連通管內同一靜止液體的液面必保持等高。" },
+                    { q: "液壓起重機利用小活塞施小力舉起大活塞上的重物，是應用？", opts: ["帕斯卡原理", "連通管原理", "阿基米德原理", "大氣壓力"], ans: 0, exp: "密閉液體中施加壓力，大小不變傳遞至液體各部分 (帕斯卡原理)。" }
+                ]
+            },
+
+            // ==================== 國三上 (第5冊 理化＋地科) ====================
+            {
+                id: 'u5_1', book: 'b5', category: 'physics', semester: '國三上・第 5 冊', num: '單元 5-1', title: '直線運動與運動學圖形', icon: '🏎️', themeColor: 'red',
+                desc: '位移與路程、速度與速率、x-t 圖與 v-t 圖分析、等加速度運動公式。', tags: ['x-t / v-t圖分析', '等加速度計算', '自由落體'],
+                concepts: [
+                    { title: '位移 vs 路程', content: '位移為起點到終點的有向線段 (向量)；路程為實際運動軌跡總長度 (純量)。' },
+                    { title: '運動學圖形重點', content: '1. x-t 圖斜率代表「速度」；2. v-t 圖斜率代表「加速度」，v-t 圖線下面積代表「位移」。' },
+                    { title: '等加速度三大公式', content: '$v = v_0 + at$；$s = v_0 t + \\frac{1}{2}at^2$；$v^2 = v_0^2 + 2as$。' }
+                ],
+                calcType: 'kinematics',
+                quiz: [
+                    { q: "操場一圈 400 公尺，學生跑完一整圈回到起點，其「位移」為？", opts: ["0 公尺", "400 公尺", "800 公尺", "無法計算"], ans: 0, exp: "起點與終點位置相同，位置差（位移）為 0。" },
+                    { q: "在 v-t（速度-時間）關係圖中，直線的「斜率」代表何種物理量？", opts: ["位置", "位移", "平均速率", "加速度"], ans: 3, exp: "斜率 Δv/Δt 即為加速度 a。" },
+                    { q: "在 v-t 圖中，圖線與時間軸所圍成的「面積」代表？", opts: ["速度變化量", "加速度", "位移", "平均速度"], ans: 2, exp: "v × t 之積分面積即為位移量 Δx。" },
+                    { q: "汽車初速 10 m/s，以 2 m/s² 等加速度前進 5 秒，末速為多少 m/s？", opts: ["15 m/s", "20 m/s", "25 m/s", "30 m/s"], ans: 1, exp: "v = v₀ + at = 10 + 2 × 5 = 20 m/s。" },
+                    { q: "汽車由靜止以 4 m/s² 等加速度出發，第 3 秒末的位置（位移）為？", opts: ["6 公尺", "12 公尺", "18 公尺", "24 公尺"], ans: 2, exp: "s = 1/2 × a × t² = 0.5 × 4 × 3² = 18 公尺。" },
+                    { q: "自由落體在地球表面附近下落，其加速度約為？", opts: ["0 m/s²", "9.8 m/s² (重力加速度 g)", "19.6 m/s²", "隨物體重量而變"], ans: 1, exp: "不計空氣阻力下自由落體加速度為定值 g ≈ 9.8 m/s²。" },
+                    { q: "下列哪一種運動狀態屬於「等速度運動」？", opts: ["等速率圓周運動", "直線且速率方向均不變的運動", "自由落體運動", "減速停靠站的火車"], ans: 1, exp: "等速度運動必須大小（速率）與方向皆恆定不變。" },
+                    { q: "在 x-t（位置-時間）圖中若為一條水平直線，表示物體處於？", opts: ["靜止狀態", "等速度運動", "等加速度運動", "變加速度運動"], ans: 0, exp: "位置隨時間不變，表示物體處於靜止狀態。" },
+                    { q: "平均速度與平均速率的比較，下列何者正確？", opts: ["平均速率可能小於平均速度量值", "平均速率必大於或等於平均速度量值", "兩者定義完全相同", "路程小於位移"], ans: 1, exp: "路程 ≥ 位移量值，故平均速率 ≥ 平均速度大小。" },
+                    { q: "打點計時器紙帶上相鄰點的距離愈來愈寬，代表物體運動？", opts: ["愈來愈慢 (減速)", "愈來愈快 (加速)", "等速度運動", "靜止"], ans: 1, exp: "打點時間間隔固定，點距變大表示相同時間內位移變大（加速）。" }
+                ]
+            },
+            {
+                id: 'u5_2', book: 'b5', category: 'physics', semester: '國三上・第 5 冊', num: '單元 5-2', title: '牛頓運動定律', icon: '🍎', themeColor: 'orange',
+                desc: '牛頓第一定律（慣性）、牛頓第二定律 F=ma、牛頓第三定律（作用力與反作用力）、圓周運動。', tags: ['F=ma計算機', '慣性現象', '作用力與反作用力'],
+                concepts: [
+                    { title: '牛頓第一定律 (慣性)', content: '物體若不受外力或合力為零，靜者恆靜，動者恆作等速度直線運動。質量愈大慣性愈大。' },
+                    { title: '牛頓第二定律', content: '物體受合力產生加速度：$F = m \\cdot a$。單位：$1\\text{ 牛頓 (N)} = 1\\text{ kg} \\cdot \\text{m/s}^2$。' },
+                    { title: '牛頓第三定律', content: '兩物體相互作用時，作用力與反作用力大小相等、方向相反、作用在同一直線上且作用於不同物體上（不能互相抵消）。' }
+                ],
+                calcType: 'newton_laws',
+                quiz: [
+                    { q: "公車緊急煞車時，乘客身體向前傾倒，這是因為？", opts: ["受到向前的推力", "慣性維持原本向前運動狀態", "摩擦力消失", "重力增加"], ans: 1, exp: "乘客下半身隨車減速，上半身因慣性保持向前速度而前傾。" },
+                    { q: "質量 2 kg 的物體受到 10 N 的合力作用，產生的加速度為多少 m/s²？", opts: ["2 m/s²", "5 m/s²", "10 m/s²", "20 m/s²"], ans: 1, exp: "a = F / m = 10 / 2 = 5 m/s²。" },
+                    { q: "火箭向後噴射高溫氣體而升空，主要應用了哪個物理定律？", opts: ["牛頓第一定律", "牛頓第二定律", "牛頓第三定律 (作用力與反作用力)", "萬有引力定律"], ans: 2, exp: "氣體給火箭反作用力推動火箭升空。" },
+                    { q: "游泳選手用力向後蹬水以獲得前進推力，是利用？", opts: ["慣性", "浮力定律", "作用力與反作用力定律", "槓桿原理"], ans: 2, exp: "向後推水獲得水給予向前的反作用推力。" },
+                    { q: "等速率圓周運動中，物體所受合力方向永遠指向？", opts: ["切線方向", "圓心方向 (向心力)", "遠離圓心 (離心方向)", "隨時間改變"], ans: 1, exp: "等速率圓周運動需要指向圓心的向心力以改變運動方向。" },
+                    { q: "1 公斤重 (1 kgw) 約等於多少牛頓 (N)？（取 g = 9.8 m/s²）", opts: ["1 N", "9.8 N", "100 N", "980 N"], ans: 1, exp: "W = mg = 1 kg × 9.8 m/s² = 9.8 N。" },
+                    { q: "人站在磅秤上用力向上跳起的瞬間，磅秤讀數會？", opts: ["變小", "變大", "保持不變", "變為零"], ans: 1, exp: "向上加速跳起需要向下施力，反作用力增大磅秤讀數。" },
+                    { q: "物體在水平光滑桌面上運動，若完全沒有外力作用，物體將會？", opts: ["立刻停止", "逐漸減速停止", "一直以原速度作等速度直線運動", "加速前進"], ans: 2, exp: "合力為零時物體維持等速度直線運動（慣性）。" },
+                    { q: "質量 50kg 的人以 100N 的力推質量 100kg 的車，車推人的反作用力為？", opts: ["50 N", "100 N", "200 N", "0 N"], ans: 1, exp: "作用力與反作用力大小必相等，即 100 N。" },
+                    { q: "若兩物體間的距離增為原本的 2 倍，則兩者之間的萬有引力變為原本的幾倍？", opts: ["2 倍", "1/2 倍", "4 倍", "1/4 倍"], ans: 3, exp: "萬有引力與距離平方成反比，距離 2 倍則引力變為 1/4。" }
+                ]
+            },
+            {
+                id: 'u5_3', book: 'b5', category: 'physics', semester: '國三上・第 5 冊', num: '單元 5-3', title: '功、功率與簡單機械', icon: '⚙️', themeColor: 'amber',
+                desc: '功 (W=Fs)、功率 (P=W/t)、動能與重力位能、力學能守恆定律、滑輪與槓桿。', tags: ['功與功率計算', '力學能守恆雲霄飛車', '簡單機械省力'],
+                concepts: [
+                    { title: '功的定義', content: '功 $W = F \\cdot s$ (力的方向與位移同向)。單位：焦耳 (J)。若力與位移垂直（如背書包等速水平前進、向心力），則作功為 0。' },
+                    { title: '力學能守恆', content: '動能 $E_k = \\frac{1}{2}mv^2$；重力位能 $U = mgh$。只有重力作功時，力學能總和 $E = E_k + U$ 保持不變。' },
+                    { title: '簡單機械原則', content: '任何機械都「無法省功」（省力必費時/費距離）。槓桿原理：$F_1 d_1 = F_2 d_2$。' }
+                ],
+                calcType: 'work_energy',
+                quiz: [
+                    { q: "下列哪一種情況，人對物體「有作功」？", opts: ["背著書包在平地等速前進", "用力推牆壁牆壁不動", "手提水桶垂直等速向上提起", "手舉槓鈴靜止停在空中"], ans: 2, exp: "提起水桶時向上施力且位移向上，力與位移同向，有作正功。" },
+                    { q: "以 10 牛頓的水平力推物體前進 5 公尺，此力對物體作功多少焦耳？", opts: ["2 J", "5 J", "50 J", "100 J"], ans: 2, exp: "W = F × s = 10 N × 5 m = 50 J。" },
+                    { q: "在 10 秒內完成 500 焦耳的功，平均功率為多少瓦特 (W)？", opts: ["5 W", "50 W", "500 W", "5000 W"], ans: 1, exp: "P = W / t = 500 / 10 = 50 W。" },
+                    { q: "質量 2 kg 的物體以 4 m/s 等速運動，其動能為多少焦耳？", opts: ["8 J", "16 J", "32 J", "64 J"], ans: 1, exp: "Ek = 1/2 × m × v² = 0.5 × 2 × 4² = 16 J。" },
+                    { q: "質量 1 kg 物體自 10 公尺高處自由落下（g = 10 m/s²），剛著地時動能為？", opts: ["10 J", "50 J", "100 J", "200 J"], ans: 2, exp: "力學能守恆：落地動能 = 初始位能 mgh = 1 × 10 × 10 = 100 J。" },
+                    { q: "關於「簡單機械」的使用，下列敘述何者正確？", opts: ["既省力又省功", "能省力但必費距離，絕不能省功", "能省功但費力", "效率必定大於 100%"], ans: 1, exp: "簡單機械受能量守恆限制，絕無法省功。" },
+                    { q: "使用「動滑輪」吊起重物，可以達到什麼效果？", opts: ["省力一半，但費一倍距離", "省一半距離", "只改變施力方向不省力", "節省功"], ans: 0, exp: "動滑輪施力為重物的一半 (省力)，但繩子需拉出 2 倍長度。" },
+                    { q: "剪鐵皮用的剪刀通常刀刃較短、手柄較長，主要目的是？", opts: ["省力", "省距離", "美觀", "增加操作速度"], ans: 0, exp: "施力臂大於抗力臂，屬於省力槓桿。" },
+                    { q: "行星繞太陽作等速率圓周運動時，太陽引力對行星作功為？", opts: ["正功", "負功", "0", "隨季節改變"], ans: 2, exp: "萬有引力（向心力）與運動方向（切線）垂直，作功為 0。" },
+                    { q: "斜面長度 5 公尺、高度 1 公尺，不計摩擦時推上斜面所需施力為物重的？", opts: ["1 倍", "1/5 倍", "5 倍", "2 倍"], ans: 1, exp: "F × L = W × h，F = W × (1/5)。" }
+                ]
+            },
+            {
+                id: 'u5_4', book: 'b5', category: 'physics', semester: '國三上・第 5 冊', num: '單元 5-4', title: '靜電現象與歐姆定律電路', icon: '⚡', themeColor: 'indigo',
+                desc: '摩擦起電與感應起電、庫侖定律、電流電壓測量、歐姆定律 V=IR 與電阻串並聯。', tags: ['歐姆定律電路板', '電阻串聯並聯', '靜電感應'],
+                concepts: [
+                    { title: '歐姆定律', content: '電壓 $V = I \\cdot R$。單位：電壓伏特 (V)、電流安培 (A)、電阻歐姆 ($\\Omega$)。' },
+                    { title: '電阻串聯 vs 並聯', content: '串聯：$R_{\\text{總}} = R_1 + R_2$，電流處處相等；並聯：$\\frac{1}{R_{\\text{總}}} = \\frac{1}{R_1} + \\frac{1}{R_2}$，各分路電壓相等。' }
+                ],
+                calcType: 'ohm_circuit',
+                quiz: [
+                    { q: "用毛皮摩擦塑膠尺，塑膠尺帶負電，是因為？", opts: ["毛皮上的質子轉移到尺上", "毛皮上的電子轉移到尺上", "尺上的正電消失", "產生新的負電荷"], ans: 1, exp: "摩擦起電為電子轉移，塑膠尺得到電子帶負電。" },
+                    { q: "電路中電阻為 10 歐姆，兩端施加 20 伏特電壓，通過電流為多少安培？", opts: ["0.5 A", "2 A", "10 A", "200 A"], ans: 1, exp: "I = V / R = 20 / 10 = 2 A。" },
+                    { q: "兩電阻 $R_1 = 4\\Omega$ 與 $R_2 = 6\\Omega$「串聯」，總電阻為？", opts: ["2.4 Ω", "5 Ω", "10 Ω", "24 Ω"], ans: 2, exp: "串聯總電阻 R總 = 4 + 6 = 10 Ω。" },
+                    { q: "兩電阻 $R_1 = 6\\Omega$ 與 $R_2 = 6\\Omega$「並聯」，總電阻為？", opts: ["3 Ω", "6 Ω", "12 Ω", "36 Ω"], ans: 0, exp: "並聯 1/R = 1/6 + 1/6 = 2/6，R總 = 3 Ω。" },
+                    { q: "測量電路中的「電流」時，安培計應如何連接至待測電路中？", opts: ["與待測元件並聯", "與待測元件串聯", "直接接電池兩極", "隨意連接"], ans: 1, exp: "安培計內阻極小，必須串聯在電路中。" },
+                    { q: "測量電路中的「電壓」時，伏特計應如何連接至待測元件兩端？", opts: ["與待測元件並聯", "與待測元件串聯", "串聯在總開關處", "與電阻並聯但極性相反"], ans: 0, exp: "伏特計內阻極大，必須與待測元件並聯測量電位差。" },
+                    { q: "金屬導線的電阻與下列何者成「反比」？", opts: ["導線長度", "導線截面積", "導線溫度", "材料電阻率"], ans: 1, exp: "電阻 R = ρ × (L / A)，與截面積 A 成反比（愈粗電阻愈小）。" },
+                    { q: "家庭用電器（如電視、冰箱、冷氣）之間的電路連接方式均為？", opts: ["全部串聯", "全部並聯", "混聯且隨時切換", "隨機連接"], ans: 1, exp: "並聯各電器電壓相同 (110V)，且任一電器關閉不影響其他電器。" },
+                    { q: "帶正電玻璃棒靠近不帶電金屬球，金屬球近端感應出負電、遠端帶正電，稱為？", opts: ["摩擦起電", "接觸起電", "靜電感應", "電中和"], ans: 2, exp: "電荷吸引金屬自由電子重新分佈，稱為靜電感應。" },
+                    { q: "若兩帶電體間距離縮小為原本的 1/2，其庫侖靜電力變為原本的幾倍？", opts: ["1/4 倍", "1/2 倍", "2 倍", "4 倍"], ans: 3, exp: "庫侖力與距離平方成反比，距離減半則力量變為 4 倍。" }
+                ]
+            },
+            // --- 國三上 地球科學單元 ---
+            {
+                id: 'u5_e1', book: 'b5', category: 'earth', semester: '國三上・第 5 冊', num: '單元 5-地1', title: '水圈與地表地質作用', icon: '🏞️', themeColor: 'teal',
+                desc: '水循環與水資源、風化侵蝕搬運沉積、河流上中下游地形與曲流凹凸岸判讀。', tags: ['河流地形', '沈積顆粒分選', '凹凸岸判讀'],
+                concepts: [
+                    { title: '地表地質四大營力', content: '風化（岩石崩解變質）、侵蝕（剝蝕帶走）、搬運（水流/風/冰川帶動）、沉積（流速減慢堆積）。' },
+                    { title: '河流地形階段', content: '上游：侵蝕為主（V型峽谷、瀑布）；中游：搬運為主；下游：沉積為主（沖積扇、三角洲、平原）。' },
+                    { title: '曲流凹岸與凸岸', content: '凹岸（外側）：流速快、侵蝕旺盛、水深較深；凸岸（內側）：流速慢、沉積為主、水淺形成沙灘。' }
+                ],
+                calcType: 'earth_river',
+                quiz: [
+                    { q: "河流在「出山口進入平原」處流速驟減，所堆積形成的地形為？", opts: ["三角洲", "沖積扇", "V型峽谷", "海蝕平台"], ans: 1, exp: "河流出山口因坡度變緩流速驟降，沉積形成扇形沖積扇。" },
+                    { q: "河流流入海洋或湖泊「出海口」處，流速降至最低所堆積形成的地形為？", opts: ["沖積扇", "三角洲", "瀑布", "海蝕洞"], ans: 1, exp: "河流出海口流速極慢，細泥沙堆積成三角洲。" },
+                    { q: "曲流河段中，關於「凹岸（外側）」的敘述何者正確？", opts: ["流速慢，以沉積為主", "流速快，以侵蝕為主，水深較深", "坡度平緩適合游泳戲水", "泥沙大量堆積形成沙洲"], ans: 1, exp: "曲流外側（凹岸）受水流正面衝擊，流速快、侵蝕強、水深。" },
+                    { q: "海水面通常被稱為地表河流侵蝕的？", opts: ["最高侵蝕基準面", "最終侵蝕基準面", "暫時侵蝕基準面", "沉積上限面"], ans: 1, exp: "海平面為地表河流下切侵蝕的極限，稱為最終侵蝕基準面。" },
+                    { q: "地球上淡水資源中，所佔比例最高的是下列何者？", opts: ["地下水", "冰川與冰冠", "湖泊水", "河川水"], ans: 1, exp: "地球淡水約 68.7% 儲存於南北極冰川與高山冰冠中。" },
+                    { q: "河流沉積物在進入靜止湖泊時，沉積顆粒大小排列順序為？", opts: ["由近岸到遠岸：粗礫石 → 細砂 → 黏土泥", "由近岸到遠岸：黏土泥 → 細砂 → 粗礫石", "完全均勻混合無分選", "顆粒大小隨機排列"], ans: 0, exp: "顆粒粗重者先沉積於近岸，細輕顆粒被帶至遠岸深水區沉積。" },
+                    { q: "下列哪一種地形是屬於「海水侵蝕作用」所形成的？", opts: ["沙灘", "沙洲", "海蝕崖與海蝕門", "潟湖"], ans: 2, exp: "海浪拍打岩岸剝蝕形成海蝕崖、海蝕洞、海蝕門。" },
+                    { q: "植物根部鑽入岩石縫隙使其破裂崩解，屬於何種地質作用？", opts: ["物理風化作用", "化學沉積作用", "搬運作用", "變質作用"], ans: 0, exp: "植物根系生長撐裂岩石屬於生物性的物理風化作用。" },
+                    { q: "過度抽取地下水可能引發的環境災害「不包括」下列何者？", opts: ["地層下陷", "海水倒灌", "地下水鹽化", "火山爆發"], ans: 3, exp: "超抽地下水導致地層壓密下陷與海水入侵，但與火山活動無關。" },
+                    { q: "風將細砂吹拂撞擊岩石表面，長期磨蝕形成的奇形岩石稱為？", opts: ["鐘乳石", "風蝕石 (風磨石)", "化石", "石灰岩"], ans: 1, exp: "風攜帶沙粒撞擊岩石產生風蝕地形。" }
+                ]
+            },
+            {
+                id: 'u5_e2', book: 'b5', category: 'earth', semester: '國三上・第 5 冊', num: '單元 5-2', title: '地球構造與板塊構造學說', icon: '🌋', themeColor: 'red',
+                desc: '地球內部構造、板塊構造學說、三大板塊邊界類型、中洋脊與海溝、地震規模與震度。', tags: ['三大板塊邊界', '中洋脊與海溝', '地震規模vs震度'],
+                concepts: [
+                    { title: '地球內部圈層', content: '由外向內為：地殼（固態岩石）、地函（主要由橄欖岩組成，含軟流圈對流）、地核（鐵鎳金屬高溫高壓）。' },
+                    { title: '三大板塊邊界類型', content: '1. 張裂型（中洋脊、東非大裂谷，新地殼生成）；2. 聚合型（海溝、褶皺山脈如喜馬拉雅山，老地殼隱沒）；3. 錯動型（轉形斷層如聖安德列斯斷層）。' },
+                    { title: '地震規模 vs 震度', content: '地震規模（芮氏規模）：代表釋放能量大小，一次地震只有一個數值，無單位；震度：代表各地地面搖晃與破壞程度，分 0~7 級。' }
+                ],
+                calcType: 'earth_plate',
+                quiz: [
+                    { q: "板塊構造學說中，板塊移動的主要驅動力來自於何處的熱對流？", opts: ["地殼", "地函軟流圈", "地核", "地表洋流"], ans: 1, exp: "地函軟流圈中的岩漿熱對流帶動上方剛硬的岩石圈板塊移動。" },
+                    { q: "新海洋地殼主要在下列哪種板塊邊界不斷生成？", opts: ["張裂型邊界 (如大西洋中洋脊)", "聚合型邊界 (如海溝)", "錯動型邊界", "大陸板塊內部"], ans: 0, exp: "張裂型邊界岩漿湧出冷卻形成新的海洋地殼。" },
+                    { q: "臺灣位於哪兩個板塊的「聚合型板塊碰撞邊界」上，地震頻繁？", opts: ["太平洋板塊與印澳板塊", "歐亞板塊與菲律賓海板塊", "北美板塊與歐亞板塊", "非洲板塊與美洲板塊"], ans: 1, exp: "臺灣位於歐亞板塊與菲律賓海板塊擠壓碰撞帶。" },
+                    { q: "喜馬拉雅山是由哪兩個大陸板塊擠壓碰撞隆起形成的高大褶皺山脈？", opts: ["歐亞板塊與印度板塊", "非洲板塊與美洲板塊", "菲律賓海板塊與太平洋板塊", "南極板塊與印澳板塊"], ans: 0, exp: "印度板塊持續向北碰撞歐亞板塊推擠出喜馬拉雅山脈。" },
+                    { q: "關於「地震規模」與「地震震度」的比較，何者正確？", opts: ["一次地震各地測得的地震規模都相同", "地震規模有分 0 到 7 級", "震度代表地震釋放的能量總量", "離震央愈遠規模愈小"], ans: 0, exp: "地震規模代表釋放總能量，一次地震僅有一個數值；各地搖晃程度為震度。" },
+                    { q: "在海洋地殼隱沒至大陸地殼下方的聚合帶，常在海底形成深邃的？", opts: ["中洋脊", "裂谷", "海溝與火山島弧", "大洋平原"], ans: 2, exp: "密度較大的海洋板塊向下隱沒俯衝形成深海溝。" },
+                    { q: "美國加州的「聖安德列斯斷層」屬於哪一種板塊邊界？", opts: ["張裂型邊界", "聚合型邊界", "錯動型邊界 (轉形斷層)", "板塊熱點"], ans: 2, exp: "兩板塊水平互相剪切錯動，屬於錯動型邊界。" },
+                    { q: "地質學上的「岩石圈」包含哪些構造範圍？", opts: ["僅包含地殼", "地殼與地函頂部剛性固態岩石層 (厚約100公里)", "整個地函", "軟流圈全部"], ans: 1, exp: "岩石圈包含全部地殼及軟流圈上方的地函最上部剛性岩石。" },
+                    { q: "大洋中洋脊兩側海洋地殼的岩石年齡分佈規律為？", opts: ["離中洋脊愈遠愈年輕", "離中洋脊愈遠愈古老且對稱分佈", "年齡完全相同", "中洋脊頂部最古老"], ans: 1, exp: "新地殼在中洋脊生成後向兩側推移，離中洋脊愈遠年代愈老且對稱。" },
+                    { q: "發生地震時地下岩層破裂產生振動的起點位置稱為？", opts: ["震央", "震源", "斷層線", "震度中心"], ans: 1, exp: "地下岩層破裂起點為震源，垂直投影到地表處為震央。" }
+                ]
+            },
+            {
+                id: 'u5_e3', book: 'b5', category: 'earth', semester: '國三上・第 5 冊', num: '單元 5-3', title: '岩石、礦物與地質年代', icon: '🪨', themeColor: 'emerald',
+                desc: '三大岩類（火成岩/沉積岩/變質岩）、礦物硬度、地層疊置與截切定律、化石與地質年代。', tags: ['三大岩類循環', '地層截切判讀', '標準化石地質代'],
+                concepts: [
+                    { title: '三大岩類分類', content: '1. 火成岩（岩漿冷卻：玄武岩、安山岩、花岡岩）；2. 沉積岩（壓密膠結：礫岩、砂岩、頁岩、石灰岩，唯一含化石）；3. 變質岩（高溫高壓變質：大理岩、片岩、板岩）。' },
+                    { title: '地層相對年代法則', content: '疊置定律（下老上新）、水平沉積定律、截切定律（被切者老、切人者新）。' },
+                    { title: '地質年代與標準化石', content: '古生代：三葉蟲、筆石；中生代：恐龍、菊石；新生代：長毛象、人類。' }
+                ],
+                calcType: 'earth_rocks',
+                quiz: [
+                    { q: "下列哪一種岩石中「最有可能」發現完整的生物化石？", opts: ["玄武岩 (火成岩)", "大理岩 (變質岩)", "頁岩 (沉積岩)", "花岡岩 (火成岩)"], ans: 2, exp: "只有沉積岩在低溫低壓沉積環境下能完整保存化石。" },
+                    { q: "石灰岩在高溫高壓地底環境下變質，會轉變為哪種變質岩？", opts: ["板岩", "大理岩", "片麻岩", "玄武岩"], ans: 1, exp: "石灰岩 (CaCO₃) 變質重結晶形成大理岩。" },
+                    { q: "澎湖群島著名的柱狀節理岩石，主要由哪種火山噴發岩漿冷卻形成的火成岩構成？", opts: ["花岡岩", "玄武岩", "安山岩", "頁岩"], ans: 1, exp: "澎湖群島由基性玄武岩熔岩冷卻收縮形成柱狀節理。" },
+                    { q: "在未倒轉的正常沉積岩地層中，依「地層疊置定律」，地層年代為？", opts: ["上方地層較老", "下方地層較老，上方較新", "各層年代相同", "無法判定"], ans: 1, exp: "沉積岩先沉積在下、後沉積在上，故下老上新。" },
+                    { q: "地層若被一條斷層切穿或被岩脈侵入截切，依「截切定律」：", opts: ["被截切的地層年代較老", "岩脈侵入年代比地層更老", "斷層比所有被切的地層都老", "兩者同時形成"], ans: 0, exp: "被切的地層必須先存在，故被截切者較老、截切者較新。" },
+                    { q: "若地層中挖掘出「三葉蟲化石」，則該地層形成的地質年代為？", opts: ["古生代", "中生代", "新生代", "前寒武紀"], ans: 0, exp: "三葉蟲為古生代（海洋生物蓬勃時代）之代表性標準化石。" },
+                    { q: "「恐龍化石」與「菊石化石」繁盛的時期屬於哪一個地質年代？", opts: ["古生代", "中生代", "新生代", "現代"], ans: 1, exp: "恐龍與菊石繁盛於中生代 (三疊紀、侏儸紀、白堊紀)。" },
+                    { q: "莫氏硬度表中，硬度為 10（天然礦物中最硬）的礦物是？", opts: ["石英", "金剛石 (鑽石)", "方解石", "滑石"], ans: 1, exp: "金剛石（碳元素同素異形體）莫氏硬度為 10。" },
+                    { q: "臺灣東部太魯閣壯麗的峽谷地形，主要是由哪種岩石構成？", opts: ["砂岩", "頁岩", "大理岩", "玄武岩"], ans: 2, exp: "太魯閣峽谷由厚層大理岩受地殼抬升與立霧溪下切侵蝕而成。" },
+                    { q: "下列哪一種礦物滴上稀鹽酸會產生二氧化碳氣泡，常用於辨識？", opts: ["石英", "方解石", "黑雲母", "長石"], ans: 1, exp: "方解石主要成分為碳酸鈣 (CaCO₃)，遇稀鹽酸劇烈產生 CO₂。" }
+                ]
+            },
+
+            // ==================== 國三下 (第6冊 理化＋地科) ====================
+            {
+                id: 'u6_1', book: 'b6', category: 'physics', semester: '國三下・第 6 冊', num: '單元 6-1', title: '電的效應與家庭用電', icon: '💡', themeColor: 'yellow',
+                desc: '電功率 P=IV、焦耳熱定律、一度電計算 (1度=1kWh=3.6×10⁶ J) 與用電安全。', tags: ['電功率計算', '一度電試算', '用電安全保險絲'],
+                concepts: [
+                    { title: '電功率公式', content: '電功率 $P = I \\cdot V = I^2 R = \\frac{V^2}{R}$。單位：瓦特 (W)。電能 $E = P \\cdot t$ (焦耳 J)。' },
+                    { title: '一度電的定義', content: '$1\\text{ 度電} = 1000\\text{ 瓦} \\times 1\\text{ 小時 (1 kWh)} = 3.6 \\times 10^6\\text{ 焦耳}$。' },
+                    { title: '用電安全', content: '保險絲或無熔絲開關 (NFB) 必須「串聯」於火線上，電路過載時自動熔斷保護。' }
+                ],
+                calcType: 'electric_power',
+                quiz: [
+                    { q: "標示「110V, 1100W」的電吹風機，正常使用時通過的電流為多少安培？", opts: ["1 A", "5 A", "10 A", "11 A"], ans: 2, exp: "I = P / V = 1100 / 110 = 10 A。" },
+                    { q: "1000 瓦的電熱水器連續使用 2 小時，消耗的電能為多少「度」？", opts: ["0.5 度", "1 度", "2 度", "2000 度"], ans: 2, exp: "1 kW × 2 hr = 2 度電 (2 kWh)。" },
+                    { q: "1 度電等於多少焦耳 (J) 的能量？", opts: ["1000 J", "3600 J", "3.6 × 10⁶ J", "1.1 × 10⁵ J"], ans: 2, exp: "1 度 = 1000W × 3600s = 3,600,000 J = 3.6 × 10⁶ J。" },
+                    { q: "家庭插座上的電器愈接愈多（並聯過多），總電路的變化為？", opts: ["總電阻變大，總電流變小", "總電阻變小，總電流變大（容易過載起火）", "總電壓變大", "電器功率變小"], ans: 1, exp: "並聯電器愈多總電阻愈小，總電流劇增容易引發電線走火。" },
+                    { q: "家庭用電的安全保險絲或無熔絲開關應如何連接？", opts: ["與負載串聯在火線上", "與負載並聯", "接在地線上", "隨意連接"], ans: 0, exp: "必須串聯於火線上，超載時才能切斷高壓電流。" },
+                    { q: "台灣一般家庭插座供應的電源為？", opts: ["直流電 110V/220V", "交流電 110V/220V (頻率 60Hz)", "交流電 50Hz", "直流電 12V"], ans: 1, exp: "台灣家庭用電為 110V/220V、60Hz 的正弦交流電。" },
+                    { q: "標有「110V, 60W」與「110V, 100W」兩燈泡並聯於 110V 電源，何者較亮？", opts: ["60W 較亮", "100W 較亮", "一樣亮", "無法判定"], ans: 1, exp: "並聯時電壓相同，功率 100W 消耗電能較多故較亮。" },
+                    { q: "電流通過導體產生熱量的現象稱為「電流熱效應」，其產生熱量與電流的關係為？", opts: ["與電流成正比", "與電流平方成正比 (H ∝ I²Rt)", "與電流成反比", "無關"], ans: 1, exp: "焦耳定律：焦耳熱 H = I²Rt，與電流平方成正比。" },
+                    { q: "三孔插座中，圓形孔主要連接至何處以防止漏電觸電？", opts: ["火線", "中性線", "接地線", "保險絲"], ans: 2, exp: "第三孔為接地線，漏電時將電流導入大地保護人身安全。" },
+                    { q: "發電廠輸送電力到遠方時，通常採取「超高電壓輸送」，主要是為了？", opts: ["增加電流", "減少電線上的電能熱散失 (P損 ∝ I²)", "提高發電量", "美觀安全"], ans: 1, exp: "提高電壓可大幅降低輸送電流 I，減少電線上的焦耳熱散失。" }
+                ]
+            },
+            {
+                id: 'u6_2', book: 'b6', category: 'physics', semester: '國三下・第 6 冊', num: '單元 6-2', title: '電流的磁效應與馬達', icon: '🧲', themeColor: 'cyan',
+                desc: '磁場與磁力線、厄斯特實驗、安培右手定則、螺線管電磁鐵、右手開掌定則與馬達。', tags: ['安培右手螺旋', '右手開掌定則', '電動機馬達轉動'],
+                concepts: [
+                    { title: '電流磁效應 (厄斯特發現)', content: '載流導線周圍會產生磁場。磁場方向由「安培右手定則」決定：右手大拇指指向電流方向，四指彎曲方向為磁場方向。' },
+                    { title: '磁場中的載流導線 (右手開掌定則)', content: '右手平攤，大拇指指向電流方向，四指指向磁場方向，手掌心推向的方向即為「受力 (安培力) 方向」。' },
+                    { title: '電動機 (馬達) 原理', content: '利用電流在磁場中受力使線圈持續旋轉。直流馬達配有「半圓形集電環 (換向器)」，每轉半圈改變一次電流方向。' }
+                ],
+                calcType: 'electromagnetism',
+                quiz: [
+                    { q: "歷史上首先發現「電流磁效應」（通電導線使磁針偏轉）的科學家是？", opts: ["牛頓", "厄斯特", "法拉第", "安培"], ans: 1, exp: "厄斯特於 1820 年首次發現載流導線使磁針偏轉。" },
+                    { q: "通電長直導線周圍的磁力線形狀為？", opts: ["同心圓", "輻射狀直線", "拋物線", "橢圓形"], ans: 0, exp: "長直導線周圍形成以導線為中心的同心圓磁場。" },
+                    { q: "想要增強「電磁鐵」的磁力，下列哪一種方法「無效」？", opts: ["增加線圈圈數", "加大通過線圈的電流", "在線圈內插入軟鐵芯", "將軟鐵芯換成塑膠棒"], ans: 3, exp: "塑膠非磁性物質，無法磁化增強磁場。" },
+                    { q: "電動機（馬達）是將什麼能量轉換為機械能（動能）的裝置？", opts: ["熱能", "電能", "化學能", "核能"], ans: 1, exp: "馬達輸入電能轉換為轉動機械能。" },
+                    { q: "直流馬達中，使線圈能夠持續同方向旋轉的關鍵構造是？", opts: ["強力磁鐵", "半圓形集電環 (換向器)", "軟鐵芯", "保險絲"], ans: 1, exp: "換向器每轉半圈改變一次線圈電流方向，維持同向旋轉力矩。" },
+                    { q: "用右手開掌定則判斷磁場中載流導線受力時，手掌心代表？", opts: ["電流方向", "磁場方向", "受力方向", "運動速率"], ans: 2, exp: "大拇指指向電流、四指指向磁場、掌心朝向為受力方向。" },
+                    { q: "螺線管通電後，判斷兩端 N/S 極使用的是？", opts: ["安培右手螺旋定則 (四指握電流，大拇指指N極)", "左手開掌定則", "牛頓第三定律", "歐姆定律"], ans: 0, exp: "右手四指順著線圈電流彎曲，大拇指所指端為 N 極。" },
+                    { q: "磁鐵外部的磁力線方向為？", opts: ["由 S 極出發進入 N 極", "由 N 極出發進入 S 極", "隨意交叉", "由中心指向外側"], ans: 1, exp: "磁鐵外部磁力線由 N 極出發，經外部空間回到 S 極。" },
+                    { q: "揚聲器（喇叭）發聲的原理是利用？", opts: ["電流磁效應使音圈在磁場中受力振動", "電磁感應發電", "靜電吸引", "摩擦起電"], ans: 0, exp: "音訊電流通過音圈受磁場力來回振動帶動紙盆發聲。" },
+                    { q: "懸掛一根磁針靜止時，磁針 N 極會指向地球的哪個方向？", opts: ["地理南方", "地理北方 (地磁 S 極附近)", "西方", "東方"], ans: 1, exp: "地磁 S 極在地理北方附近，吸引磁針 N 極指向北方。" }
+                ]
+            },
+            {
+                id: 'u6_3', book: 'b6', category: 'physics', semester: '國三下・第 6 冊', num: '單元 6-3', title: '電磁感應與發電機', icon: '⚡', themeColor: 'purple',
+                desc: '法拉第電磁感應、冷次定律阻礙磁通量變化、交流發電機原理與變壓器升降壓。', tags: ['法拉第電磁感應', '冷次定律判定', '變壓器升降壓'],
+                concepts: [
+                    { title: '法拉第電磁感應', content: '當穿過封閉線圈的磁力線數目（磁通量）發生變化時，線圈產生「感應電流」。磁鐵移動愈快、線圈圈數愈多，感應電流愈大。' },
+                    { title: '冷次定律', content: '感應電流所產生的磁場方向，永遠「阻礙」原磁場磁力線數目的變化（來拒去留）。' },
+                    { title: '發電機與變壓器', content: '發電機將機械能轉為電能。變壓器升降壓公式：$\\frac{V_1}{V_2} = \\frac{N_1}{N_2}$ (電壓與線圈圈數成正比)。' }
+                ],
+                calcType: 'induction',
+                quiz: [
+                    { q: "發現「磁生電（電磁感應現象）」的科學家是？", opts: ["厄斯特", "法拉第", "安培", "愛因斯坦"], ans: 1, exp: "法拉第於 1831 年發現電磁感應現象。" },
+                    { q: "發電機是將什麼能量轉換為電能的裝置？", opts: ["機械能 (動能)", "化學能", "熱能", "光能"], ans: 0, exp: "發電機利用機械轉動帶動線圈切割磁力線產生電能。" },
+                    { q: "將磁鐵 N 極快速插進線圈時，線圈頂端產生的感應磁場極性為？", opts: ["N 極 (排斥磁鐵接近)", "S 極", "不產生磁場", "中性"], ans: 0, exp: "冷次定律「來拒去留」，磁鐵 N 極接近時線圈感應出 N 極抗拒。" },
+                    { q: "下列哪一種情況「不會」在封閉線圈中產生感應電流？", opts: ["將磁鐵快速插入線圈", "將磁鐵自線圈中快速拔出", "磁鐵靜止置於線圈內部不動", "線圈在磁場中旋轉"], ans: 2, exp: "磁鐵靜止時通過線圈的磁力線數目沒有變化，不產生感應電流。" },
+                    { q: "變壓器輸入端線圈 100 匝，輸出端線圈 200 匝。輸入 110V 交流電，輸出電壓為？", opts: ["55 V", "110 V", "220 V", "440 V"], ans: 2, exp: "V₁/V₂ = N₁/N₂，110 / V₂ = 100 / 200，故 V₂ = 220 V (升壓)。" },
+                    { q: "變壓器工作時，必須輸入何種電源才能正常運作？", opts: ["恆定直流電 (DC)", "交流電 (AC)", "乾電池電源", "任何電源皆可"], ans: 1, exp: "交流電隨時間改變電流方向大小，才能在鐵芯中產生變化的磁場。" },
+                    { q: "日常生活中利用「電磁感應」原理運作的電器是？", opts: ["電磁爐 / 無線充電盤", "電烤箱", "鎢絲燈泡", "電熨斗"], ans: 0, exp: "電磁爐利用高頻變化的磁場在鍋底感應出渦電流發熱。" },
+                    { q: "磁鐵自垂直放置的銅管中落下（銅為非磁性金屬導體），下落速度會？", opts: ["比自由落體更快", "比自由落體慢 (受到冷次定律感應阻力)", "與自由落體完全相同", "立即靜止停在空中"], ans: 1, exp: "銅管產生感應渦電流產生阻礙磁鐵下落的向上磁力，下落減速。" },
+                    { q: "腳踏車磨電燈摩擦車輪旋轉而發光，主要是利用？", opts: ["電流熱效應", "電磁感應發電機", "電池化學反應", "靜電"], ans: 1, exp: "車輪旋轉帶動磁鐵轉動產生感應電流發光。" },
+                    { q: "冷次定律的核心觀念可以簡化為？", opts: ["磁場愈大電流愈大", "來拒去留 (阻礙磁通量變化)", "正負電荷相吸", "質量守恆"], ans: 1, exp: "冷次定律本質為阻礙磁通量改變（來者抗拒、去者挽留）。" }
+                ]
+            },
+            // --- 國三下 地球科學單元 ---
+            {
+                id: 'u6_e1', book: 'b6', category: 'earth', semester: '國三下・第 6 冊', num: '單元 6-地1', title: '大氣分層與千變萬化的天氣', icon: '🌤️', themeColor: 'cyan',
+                desc: '大氣垂直分層、氣壓與風向偏轉、冷鋒與暖鋒過境天氣、梅雨滯留鋒與颱風天氣圖。', tags: ['大氣分層', '冷鋒暖鋒過境', '等壓線天氣圖'],
+                concepts: [
+                    { title: '大氣垂直分層', content: '由下而上為：1. 對流層（天氣現象發生處，高度愈高溫度愈低）；2. 平流層（含臭氧層吸收紫外線，適合長程飛機飛行）；3. 中氣層；4. 增溫層（電離層）。' },
+                    { title: '氣團與鋒面', content: '冷鋒：冷空氣推向暖空氣，鋒後常有陣雨或雷雨，過境後氣溫驟降；暖鋒：暖空氣爬升冷空氣上，鋒前持續性降雨；滯留鋒：冷暖氣團勢均力敵（臺灣5~6月梅雨季）。' },
+                    { title: '氣壓與風向', content: '風由高氣壓吹向低氣壓。北半球受地球自轉科氏力影響向右偏轉：高氣壓順時針向外輻散，低氣壓（含颱風）逆時針向中心輻合上升。' }
+                ],
+                calcType: 'earth_weather',
+                quiz: [
+                    { q: "地球大氣層中，雲、雨、霧、雪等天氣現象主要發生在何處？", opts: ["對流層", "平流層", "中氣層", "增溫層 (熱氣層)"], ans: 0, exp: "對流層含有 90% 以上的水氣且垂直對流旺盛，天氣現象均在此發生。" },
+                    { q: "能吸收大量太陽紫外線、保護地球地表生物的「臭氧層」，位於大氣哪一層？", opts: ["對流層底部", "平流層中", "中氣層頂部", "外太空"], ans: 1, exp: "臭氧層位於平流層（約 20~30 公里高處），吸收紫外線使平流層升溫。" },
+                    { q: "「冷鋒」過境時，當地的天氣通常會發生何種變化？", opts: ["氣溫驟降、颳風、雲量增加並降雨", "氣溫大幅上升、晴空萬里", "氣壓大幅下降但氣溫不變", "天氣完全無變化"], ans: 0, exp: "冷鋒後方冷空氣推進，迫使暖空氣抬升成雲致雨，過境後氣溫驟降。" },
+                    { q: "每年五、六月間臺灣常出現連續陰雨的「梅雨季」，主要是由何種鋒面徘徊造成？", opts: ["冷鋒", "暖鋒", "滯留鋒", "囚錮鋒"], ans: 2, exp: "蒙古冷氣團與太平洋暖氣團勢力相當，形成徘徊不前的滯留鋒。" },
+                    { q: "北半球的「颱風（熱帶低氣壓）」其近地面氣流旋轉方向為？", opts: ["順時針向中心輻合", "逆時針向中心輻合上升", "順時針向外輻散", "直線向外衝出"], ans: 1, exp: "北半球低氣壓受科氏力向右偏，氣流呈逆時針向中心輻合上升。" },
+                    { q: "在地面天氣圖上，線條標示等壓線密集的地方代表？", opts: ["氣壓梯度大，風速較強", "氣壓梯度小，風平浪靜", "氣溫極高", "一定會下大雪"], ans: 0, exp: "等壓線愈密集，單位距離氣壓差（氣壓梯度）愈大，風力愈強。" },
+                    { q: "風的流動方向本質上是由於兩地之間存在什麼差異所造成？", opts: ["氣壓高低差異 (由高壓吹向低壓)", "水氣多寡", "地勢高低", "植被覆蓋率"], ans: 0, exp: "氣壓梯度力驅使空氣自高氣壓區流向低氣壓區形成風。" },
+                    { q: "臺灣冬季盛行的「東北季風」主要是來自哪一個大陸高氣壓系統？", opts: ["太平洋高壓", "蒙古-西伯利亞大陸冷高壓", "印度低壓", "赤道低壓"], ans: 1, exp: "冬季蒙古西伯利亞冷高壓順時針吹出東北季風。" },
+                    { q: "白天在海邊常吹「海風」，是因為陸地比熱小升溫快形成？", opts: ["陸地熱低壓，風自海洋吹向陸地", "陸地冷高壓", "海洋熱低壓", "與溫度無關"], ans: 0, exp: "白天陸地比熱小升溫快形成熱低壓，海風自海洋高壓吹向陸地。" },
+                    { q: "氣象局發布颱風警報時，中心氣壓數值愈低代表該颱風強度？", opts: ["愈弱", "愈強 (中心氣壓愈低，氣壓梯度愈大風速愈強)", "完全無關", "即將消散"], ans: 1, exp: "中心氣壓愈低，周圍氣壓梯度愈大，颱風風速愈強烈。" }
+                ]
+            },
+            {
+                id: 'u6_e2', book: 'b6', category: 'earth', semester: '國三下・第 6 冊', num: '單元 6-2', title: '複雜的氣候與全球環境變遷', icon: '🌡️', themeColor: 'amber',
+                desc: '溫室效應原理與溫室氣體、全球暖化與海平面上升、臭氧層破洞、聖嬰與反聖嬰現象。', tags: ['溫室效應模擬', '全球暖化海平面', '聖嬰沃克環流'],
+                concepts: [
+                    { title: '溫室效應原理', content: '溫室氣體（$CO_2, CH_4, N_2O, H_2O$）吸收地表輻射出的長波紅外線熱輻射，使地表維持適宜生存溫度。但過量排放加劇全球暖化。' },
+                    { title: '臭氧層破壞', content: '人類大量使用氟氯碳化物 (CFCs)，釋放氯原子催化分解平流層臭氧 ($O_3$)，導致南極上空出現臭氧洞，增加地表紫外線暴露。' },
+                    { title: '聖嬰現象 (El Niño)', content: '赤道東太平洋（南美秘魯沿岸）海溫異常偏高，東太平洋多雨洪澇、秘魯湧升流減弱漁獲大減；西太平洋（澳洲/印尼）乾旱森林大火。' }
+                ],
+                calcType: 'earth_climate',
+                quiz: [
+                    { q: "下列哪一種氣體是造成近代「人為全球暖化加劇」最主要的溫室氣體？", opts: ["氧氣 (O₂)", "氮氣 (N₂)", "二氧化碳 (CO₂)", "氬氣 (Ar)"], ans: 2, exp: "燃燒大量化石燃料排放大量 CO₂，強烈吸收紅外線熱輻射。" },
+                    { q: "溫室效應氣體主要吸收地表所放射出的何種輻射波段？", opts: ["可見光", "紫外線", "長波紅外線 (熱輻射)", "X射線"], ans: 2, exp: "太陽短波可見光穿透大氣，地表吸收後輻射長波紅外線被溫室氣體攔截。" },
+                    { q: "造成南極上空「臭氧層破洞」最主要的化學人造物質是？", opts: ["二氧化碳", "氟氯碳化物 (CFCs)", "二氧化硫", "甲烷"], ans: 1, exp: "CFCs 上升至平流層分解出氯原子，連鎖催化破壞臭氧分子。" },
+                    { q: "當發生「聖嬰現象」時，赤道太平洋地區的氣候特徵為？", opts: ["東太平洋 (秘魯沿岸) 水溫異常偏高且多雨", "西太平洋澳洲暴雨成災", "全球平均氣溫劇降", "東太平洋漁獲量暴增"], ans: 0, exp: "聖嬰年赤道信風減弱，東太平洋水溫異常升高、對流旺盛多雨。" },
+                    { q: "全球暖化可能導致的全球性環境危機「不包括」下列何者？", opts: ["極地冰川融化", "全球海平面上升淹沒沿海低地", "極端氣候（乾旱與暴雨）頻率增加", "地磁完全消失"], ans: 3, exp: "地磁由地球外核液態鐵流動產生，與大氣暖化無直接關聯。" },
+                    { q: "蒙特婁議定書簽署的主要目的，是為了管制與禁用何種物質以保護地球？", opts: ["溫室氣體 CO₂", "破壞臭氧層的氟氯碳化物 (CFCs)", "塑膠微粒", "放射性廢棄物"], ans: 1, exp: "1987 年簽署蒙特婁議定書以逐步淘汰氟氯碳化物。" },
+                    { q: "在聖嬰現象發生的年份，臺灣冬季的天氣趨勢通常容易偏向？", opts: ["極度酷寒乾燥", "偏暖且春雨偏多", "完全不下雨", "連續強烈颱風侵襲"], ans: 1, exp: "聖嬰年臺灣冬季至隔年春季通常氣溫偏暖、降雨偏多。" },
+                    { q: "如果地球大氣層完全沒有自然的溫室氣體，地球表面平均溫度將會？", opts: ["上升至 100°C", "降至約 -18°C 冰凍冰封", "維持 15°C 不變", "無法確定"], ans: 1, exp: "適度的自然溫室效應使地表維持約 15°C，否則將降至 -18°C 嚴寒。" },
+                    { q: "下列哪一種人類活動最能直接幫助「減少大氣中的二氧化碳濃度」？", opts: ["大規模植樹造林與保護雨林", "大量燃燒天然氣替代煤炭", "興建火力發電廠", "開墾森林為農田"], ans: 0, exp: "綠色植物行光合作用能有效吸收 CO₂ 固碳。" },
+                    { q: "下列何者也是溫室氣體之一，主要來自畜牧業反芻動物與水稻田排放？", opts: ["氧氣", "甲烷 (CH₄)", "氮氣", "一氧化碳"], ans: 1, exp: "甲烷 (CH₄) 溫室效應潛力約為 CO₂ 的 25 倍以上。" }
+                ]
+            },
+            {
+                id: 'u6_e3', book: 'b6', category: 'earth', semester: '國三下・第 6 冊', num: '單元 6-3', title: '日月地系統、月相與浩瀚宇宙', icon: '🌔', themeColor: 'indigo',
+                desc: '四季成因與太陽直射點、月相盈虧週期、日食與月食、大潮與小潮、太陽系與銀河系。', tags: ['月相盈虧模擬', '四季太陽直射', '日食月食與潮汐'],
+                concepts: [
+                    { title: '地球自轉與公轉', content: '自轉產生「晝夜交替」與天體東升西落；地軸傾斜 23.5° 繞日公轉，使太陽直射點在南北回歸線間移動產生「四季更替」。' },
+                    { title: '月相盈虧週期 (朔望月約29.5天)', content: '新月（朔，農曆初一） $\\rightarrow$ 上弦月（初七/八） $\\rightarrow$ 滿月（望，十五） $\\rightarrow$ 下弦月（二十二/三）。月球本身不發光，反射太陽光。' },
+                    { title: '日食、月食與潮汐', content: '日食發生於「朔（初一）」，月球遮住太陽；月食發生於「望（十五）」，地球影子遮住月球。朔與望時日月引力疊加產生「大潮」。' }
+                ],
+                calcType: 'earth_astro',
+                quiz: [
+                    { q: "地球上產生「一年四季更替」的主要天文原因是？", opts: ["地球公轉軌道為橢圓，離太陽遠近不同", "地軸傾斜 23.5 度繞太陽公轉，導致太陽直射點隨季節移動", "太陽本身發光強度週期性改變", "月球引力引發氣溫變化"], ans: 1, exp: "地軸傾斜公轉使太陽直射點在夏至直射北回歸線、冬至直射南回歸線產生四季。" },
+                    { q: "中秋節（農曆八月十五日）當天晚上的月相為？", opts: ["新月 (朔)", "上弦月", "滿月 (望)", "下弦月"], ans: 2, exp: "農曆十五月球運行至地球外側，整面受光面向地球形成滿月。" },
+                    { q: "「日食」現象只可能發生在農曆的哪一天？", opts: ["初一 (新月/朔)", "初七 (上弦月)", "十五 (滿月/望)", "二十二 (下弦月)"], ans: 0, exp: "日食時月球位於太陽與地球之間，只能發生在農曆初一 (朔)。" },
+                    { q: "發生「月食」時，日月地的相對位置排列順序為？", opts: ["太陽 — 月球 — 地球", "太陽 — 地球 — 月球 (地球影子遮住月球)", "地球 — 太陽 — 月球", "月球 — 太陽 — 地球"], ans: 1, exp: "月食時地球在太陽與月球中間，月球進入地球陰影。" },
+                    { q: "每逢農曆「初一（朔）」與「十五（望）」時，海邊潮水落差最大，稱為？", opts: ["大潮 (日月引潮力同向加成)", "小潮", "中潮", "無潮"], ans: 0, exp: "初一與十五太陽、月球、地球連成一線，引潮力相加產生大潮。" },
+                    { q: "在北半球夏至（約6月22日）當天正午，太陽光直射在地球的哪一個緯度？", opts: ["赤道 (0°)", "北回歸線 (23.5°N)", "南回歸線 (23.5°S)", "北極點 (90°N)"], ans: 1, exp: "夏至太陽直射北回歸線 (23.5°N)，北半球晝最長夜最短。" },
+                    { q: "夜晚在北半球仰望星空，所有星星似乎都繞著哪一顆恆星旋轉？", opts: ["織女星", "北極星 (位於地軸北端延伸線上)", "天狼星", "金星"], ans: 1, exp: "地球自轉軸北端正對北極星附近，故天體視運動繞北極星旋轉。" },
+                    { q: "太陽系八大行星中，體積最大、質量最大的「氣態巨行星」是？", opts: ["地球", "火星", "木星", "土星"], ans: 2, exp: "木星為太陽系最大行星，質量超過其他所有行星總和。" },
+                    { q: "光年 (Light Year) 在天文學上是用來衡量什麼的單位？", opts: ["時間", "距離 (光在真空中前進一年的距離)", "光度", "質量"], ans: 1, exp: "光年為長度/距離單位，約等於 9.46 × 10¹² 公里。" },
+                    { q: "農曆初七、初八時，傍晚日落時抬頭看見亮面朝西的半圓形月亮是？", opts: ["上弦月", "下弦月", "新月", "滿月"], ans: 0, exp: "上弦月亮西半邊，上半夜可見，午夜於西方落下。" }
+                ]
+            }
+        ];
+
+        /* -------------------------------------------------------------
+           2. STATE & USER MANAGEMENT
+        ------------------------------------------------------------- */
+        let currentStudent = null;
+        let activeUnitId = 'u3_1';
+        let currentFilter = 'all';
+        let currentQuizAnswers = {};
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderUnitsGrid();
+            populateQuickSelect();
+
+            const saved = localStorage.getItem('nani_science_full_session');
+            if (saved) {
+                try {
+                    currentStudent = JSON.parse(saved);
+                    updateStudentUI();
+                    showView('portal');
+                } catch(e) {
+                    showView('login');
+                }
+            } else {
+                showView('login');
+            }
+            renderMath();
+        });
+
+        function renderMath() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }
+        }
+
+        function showView(vName) {
+            ['login', 'portal', 'unit'].forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) {
+                    if (v === vName) {
+                        el.classList.remove('hidden');
+                        el.classList.add('flex');
+                    } else {
+                        el.classList.add('hidden');
+                        el.classList.remove('flex');
+                    }
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => renderMath(), 50);
+        }
+
+        function selectAvatar(emoji) {
+            document.getElementById('login-avatar').value = emoji;
+            document.querySelectorAll('.avatar-opt').forEach(btn => {
+                if (btn.dataset.avatar === emoji) {
+                    btn.classList.add('bg-indigo-50', 'border-indigo-600');
+                    btn.classList.remove('bg-slate-100', 'border-transparent');
+                } else {
+                    btn.classList.remove('bg-indigo-50', 'border-indigo-600');
+                    btn.classList.add('bg-slate-100', 'border-transparent');
+                }
+            });
+        }
+
+        function handleStudentLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('login-name').value.trim();
+            const className = document.getElementById('login-class').value;
+            const seat = document.getElementById('login-seat').value;
+            const avatar = document.getElementById('login-avatar').value || '🧪';
+            if (!name) return alert('請輸入學生姓名！');
+
+            currentStudent = { name, className, seat, avatar, loginTime: new Date().toISOString() };
+            localStorage.setItem('nani_science_full_session', JSON.stringify(currentStudent));
+            updateStudentUI();
+            showView('portal');
+        }
+
+        function quickGuestLogin() {
+            currentStudent = { name: '張大同 (示範學生)', className: '803 班', seat: '12', avatar: '🧪', loginTime: new Date().toISOString() };
+            localStorage.setItem('nani_science_full_session', JSON.stringify(currentStudent));
+            updateStudentUI();
+            showView('portal');
+        }
+
+        function handleLogout() {
+            if (confirm('確定要登出並切換學生帳號嗎？')) {
+                localStorage.removeItem('nani_science_full_session');
+                currentStudent = null;
+                showView('login');
+            }
+        }
+
+        function returnToPortal() {
+            updateStudentUI();
+            showView('portal');
+        }
+
+        function getStudentScores(name) {
+            const all = JSON.parse(localStorage.getItem('nani_science_full_scores') || '{}');
+            return all[name] || {};
+        }
+
+        function saveStudentScore(name, unitId, score) {
+            const all = JSON.parse(localStorage.getItem('nani_science_full_scores') || '{}');
+            if (!all[name]) all[name] = {};
+            const old = all[name][unitId] || 0;
+            all[name][unitId] = Math.max(old, score);
+            localStorage.setItem('nani_science_full_scores', JSON.stringify(all));
+        }
+
+        function updateStudentUI() {
+            if (!currentStudent) return;
+            document.getElementById('portal-user-avatar').innerText = currentStudent.avatar;
+            document.getElementById('portal-user-name').innerText = currentStudent.name;
+            document.getElementById('portal-user-class').innerText = `${currentStudent.className} ${currentStudent.seat}號`;
+            document.getElementById('banner-user-name').innerText = currentStudent.name;
+
+            document.querySelectorAll('.user-avatar-tag').forEach(el => el.innerText = currentStudent.avatar);
+            document.querySelectorAll('.user-name-tag').forEach(el => el.innerText = currentStudent.name);
+
+            const scores = getStudentScores(currentStudent.name);
+            let completed = 0;
+            let total = 0;
+
+            curriculumData.forEach(u => {
+                const s = scores[u.id];
+                const scoreBadge = document.getElementById(`score-tag-${u.id}`);
+                if (s !== undefined && s !== null) {
+                    completed++;
+                    total += s;
+                    if (scoreBadge) scoreBadge.innerHTML = `<span class="text-emerald-400 font-bold font-mono">${s} 分</span> (已完成)`;
+                } else {
+                    if (scoreBadge) scoreBadge.innerText = '尚未測驗';
+                }
+            });
+
+            document.getElementById('stat-completed-units').innerHTML = `${completed} <span class="text-xs text-slate-500">/ 25</span>`;
+            document.getElementById('stat-quiz-avg').innerText = completed > 0 ? `${Math.round(total / completed)} 分` : '--';
+
+            // Badges unlock logic
+            const b3Units = curriculumData.filter(u => u.book === 'b3');
+            const b4Units = curriculumData.filter(u => u.book === 'b4');
+            const earthUnits = curriculumData.filter(u => u.category === 'earth');
+            const g9Units = curriculumData.filter(u => u.book === 'b5' || u.book === 'b6');
+
+            const isB3Done = b3Units.every(u => scores[u.id] !== undefined);
+            const isB4Done = b4Units.every(u => scores[u.id] !== undefined);
+            const isEarthDone = earthUnits.every(u => scores[u.id] !== undefined);
+            const isG9Done = g9Units.every(u => scores[u.id] !== undefined);
+            const isPerfect = completed === 25 && curriculumData.every(u => scores[u.id] === 100);
+
+            toggleBadge('badge-box-b3', isB3Done);
+            toggleBadge('badge-box-b4', isB4Done);
+            toggleBadge('badge-box-earth', isEarthDone);
+            toggleBadge('badge-box-g9', isG9Done);
+            toggleBadge('badge-box-perfect', isPerfect);
+
+            let bCount = 1 + (isB3Done?1:0) + (isB4Done?1:0) + (isEarthDone?1:0) + (isG9Done?1:0) + (isPerfect?1:0);
+            document.getElementById('stat-badge-count').innerText = bCount;
+        }
+
+        function toggleBadge(id, state) {
+            const el = document.getElementById(id);
+            if (el) {
+                if (state) el.classList.remove('opacity-40');
+                else el.classList.add('opacity-40');
+            }
+        }
+
+        /* -------------------------------------------------------------
+           3. PORTAL UNITS GRID & FILTER
+        ------------------------------------------------------------- */
+        function renderUnitsGrid() {
+            const grid = document.getElementById('units-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            curriculumData.forEach(u => {
+                const card = document.createElement('div');
+                card.id = `unit-card-${u.id}`;
+                card.className = `unit-card-item unit-book-${u.book} ${u.category === 'earth' ? 'unit-cat-earth' : 'unit-cat-physics-chem'} bg-slate-800/90 border-2 border-${u.themeColor}-500/70 rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-${u.themeColor}-400 transition transform hover:-translate-y-1`;
+
+                let tagsHTML = u.tags.map(t => `<span class="bg-slate-700/80 text-${u.themeColor}-200 px-2 py-0.5 rounded text-[11px]">${t}</span>`).join(' ');
+
+                card.innerHTML = `
+                    <div class="absolute top-0 right-0">
+                        <span class="bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-0.8 rounded-bl-xl shadow flex items-center space-x-1">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>開放學習中</span>
+                        </span>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="w-12 h-12 rounded-xl bg-${u.themeColor}-600/30 border border-${u.themeColor}-500/50 flex items-center justify-center text-2xl text-${u.themeColor}-400">
+                                ${u.icon}
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-semibold text-${u.themeColor}-400 uppercase tracking-wider block">${u.semester}</span>
+                                <h4 class="text-base font-bold text-white leading-snug">${u.num} ${u.title}</h4>
+                            </div>
+                        </div>
+                        <p class="text-slate-300 text-xs leading-relaxed mb-4 line-clamp-2">
+                            ${u.desc}
+                        </p>
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            ${tagsHTML}
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-700 rounded-xl p-2.5 mb-5 text-xs flex items-center justify-between">
+                            <span class="text-slate-400"><i class="fa-solid fa-pen-to-square mr-1"></i>最高成績：</span>
+                            <span id="score-tag-${u.id}" class="font-bold text-slate-300">尚未測驗</span>
+                        </div>
+                    </div>
+                    <button onclick="openUnit('${u.id}')" class="w-full bg-gradient-to-r from-${u.themeColor}-600 to-${u.themeColor}-500 hover:brightness-110 text-white font-bold py-2.5 rounded-xl shadow transition flex items-center justify-center space-x-2 text-xs sm:text-sm">
+                        <span>進入單元學習</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterUnits(filterKey) {
+            currentFilter = filterKey;
+            ['all', 'b3', 'b4', 'b5', 'b6', 'earth'].forEach(k => {
+                const btn = document.getElementById(`tab-btn-${k}`);
+                if (btn) {
+                    if (k === filterKey) {
+                        btn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow-sm transition";
+                    } else {
+                        btn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
+                    }
+                }
+            });
+
+            document.querySelectorAll('.unit-card-item').forEach(card => {
+                if (filterKey === 'all') {
+                    card.classList.remove('hidden');
+                } else if (filterKey === 'earth') {
+                    if (card.classList.contains('unit-cat-earth')) card.classList.remove('hidden');
+                    else card.classList.add('hidden');
+                } else {
+                    if (card.classList.contains(`unit-book-${filterKey}`)) card.classList.remove('hidden');
+                    else card.classList.add('hidden');
+                }
+            });
+        }
+
+        function populateQuickSelect() {
+            const sel = document.getElementById('unit-quick-select');
+            if (!sel) return;
+            sel.innerHTML = '';
+            curriculumData.forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u.id;
+                opt.innerText = `${u.num} ${u.title}`;
+                sel.appendChild(opt);
+            });
+        }
+
+        /* -------------------------------------------------------------
+           4. DYNAMIC UNIT LEARNING ENGINE
+        ------------------------------------------------------------- */
+        function openUnit(unitId) {
+            activeUnitId = unitId;
+            const u = curriculumData.find(item => item.id === unitId);
+            if (!u) return;
+
+            document.getElementById('unit-header-semester').innerText = u.semester;
+            document.getElementById('unit-header-title').innerText = `${u.num}：${u.title}`;
+            document.getElementById('unit-quick-select').value = unitId;
+
+            // Concepts
+            const cContainer = document.getElementById('unit-concepts-container');
+            cContainer.innerHTML = '';
+            u.concepts.forEach((c, idx) => {
+                const box = document.createElement('div');
+                box.className = "bg-white border border-slate-200 p-4 rounded-xl shadow-sm space-y-1.5";
+                box.innerHTML = `
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center">
+                        <span class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center mr-2">${idx + 1}</span>
+                        ${c.title}
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed pl-7">${c.content}</p>
+                `;
+                cContainer.appendChild(box);
+            });
+
+            // Interactive widget
+            renderInteractiveWidget(u);
+
+            // Quiz
+            initCurrentQuiz(u);
+
+            showView('unit');
+            setTimeout(() => renderMath(), 60);
+        }
+
+        function renderInteractiveWidget(u) {
+            const container = document.getElementById('unit-interactive-container');
+            container.innerHTML = '';
+
+            const widget = document.createElement('div');
+            widget.className = "bg-slate-900 text-white rounded-2xl p-6 shadow-xl space-y-6";
+
+            if (u.calcType === 'density') {
+                widget.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <h3 class="font-bold text-indigo-300 text-sm sm:text-base"><i class="fa-solid fa-sliders mr-2"></i>即時密度計算機與浮沉模擬</h3>
+                        <span class="text-xs bg-indigo-800 text-indigo-200 px-2.5 py-0.5 rounded-full">動態實驗</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs mb-1"><span>質量 (M)</span><span id="u_m_val" class="font-mono text-indigo-300">100 g</span></div>
+                                <input type="range" id="u_m_input" min="1" max="500" value="100" class="w-full accent-indigo-500">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs mb-1"><span>體積 (V)</span><span id="u_v_val" class="font-mono text-indigo-300">50 cm³</span></div>
+                                <input type="range" id="u_v_input" min="1" max="200" value="50" class="w-full accent-indigo-500">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 text-center pt-2">
+                                <div class="bg-slate-800 p-2.5 rounded-lg"><span class="text-[11px] text-slate-400 block">密度 (CGS)</span><span id="u_d_cgs" class="text-xl font-bold text-emerald-400 font-mono">2.00</span> <span class="text-[10px] text-slate-400">g/cm³</span></div>
+                                <div class="bg-slate-800 p-2.5 rounded-lg"><span class="text-[11px] text-slate-400 block">密度 (SI)</span><span id="u_d_si" class="text-xl font-bold text-cyan-400 font-mono">2000</span> <span class="text-[10px] text-slate-400">kg/m³</span></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-xl flex flex-col items-center justify-center border border-slate-800">
+                            <div class="w-36 h-36 border-b-4 border-x-4 border-slate-400 rounded-b-xl relative bg-blue-900/30 overflow-hidden flex flex-col justify-end">
+                                <div class="w-full bg-cyan-500/40 relative flex items-center justify-center" style="height: 75%;">
+                                    <div id="u_float_obj" class="w-8 h-8 bg-amber-500 rounded text-[9px] font-bold flex items-center justify-center transition-all duration-300 absolute">物體</div>
+                                </div>
+                            </div>
+                            <div id="u_float_status" class="mt-2 text-xs font-bold text-red-400">沉入水底 (D > 1.0)</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(widget);
+                setTimeout(() => {
+                    const mIn = document.getElementById('u_m_input');
+                    const vIn = document.getElementById('u_v_input');
+                    function updateD() {
+                        const m = parseFloat(mIn.value);
+                        const v = parseFloat(vIn.value);
+                        document.getElementById('u_m_val').innerText = `${m} g`;
+                        document.getElementById('u_v_val').innerText = `${v} cm³`;
+                        const d = m / v;
+                        document.getElementById('u_d_cgs').innerText = d.toFixed(2);
+                        document.getElementById('u_d_si').innerText = Math.round(d * 1000);
+                        const obj = document.getElementById('u_float_obj');
+                        const st = document.getElementById('u_float_status');
+                        if (d < 1.0) {
+                            obj.style.top = "5px";
+                            st.innerText = "浮在水面 (D < 1.0)";
+                            st.className = "mt-2 text-xs font-bold text-emerald-400";
+                        } else if (Math.abs(d - 1.0) < 0.05) {
+                            obj.style.top = "40px";
+                            st.innerText = "懸浮於水中 (D ≈ 1.0)";
+                            st.className = "mt-2 text-xs font-bold text-amber-400";
+                        } else {
+                            obj.style.top = "75px";
+                            st.innerText = "沉入水底 (D > 1.0)";
+                            st.className = "mt-2 text-xs font-bold text-rose-400";
+                        }
+                    }
+                    mIn.oninput = updateD;
+                    vIn.oninput = updateD;
+                    updateD();
+                }, 50);
+
+            } else if (u.calcType === 'earth_river') {
+                widget.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <h3 class="font-bold text-teal-300 text-sm sm:text-base"><i class="fa-solid fa-water mr-2"></i>河流地質作用與曲流凹凸岸動態判讀</h3>
+                        <span class="text-xs bg-teal-800 text-teal-200 px-2.5 py-0.5 rounded-full">地貌模擬</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <div class="space-y-3 text-xs">
+                            <div class="bg-slate-800 p-3 rounded-xl">
+                                <strong class="text-teal-300 block mb-1">【河流各階段主要作用】</strong>
+                                <div>🏞️ <strong>上游：</strong>坡陡流急 $\\rightarrow$ 侵蝕為主 (V型峽谷、瀑布)</div>
+                                <div>🌊 <strong>中游：</strong>搬運為主 $\\rightarrow$ 形成曲流與河階</div>
+                                <div>🏖️ <strong>下游出海口：</strong>流速極緩 $\\rightarrow$ 沉積為主 (沖積扇、三角洲)</div>
+                            </div>
+                            <div class="bg-slate-800 p-3 rounded-xl">
+                                <strong class="text-amber-300 block mb-1">【曲流凹凸岸口訣】</strong>
+                                <div>🔴 <strong>凹岸 (外側)：</strong>流速快、侵蝕強、水深較深（易坍塌，不可建房）</div>
+                                <div>🟢 <strong>凸岸 (內側)：</strong>流速慢、沉積旺盛、水淺成沙灘（適合農耕、居住）</div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col items-center justify-center text-center">
+                            <div class="text-xs text-slate-400 mb-2">曲流橫剖面水流與沖刷示意圖</div>
+                            <div class="w-full h-28 bg-gradient-to-r from-rose-900/40 via-blue-900/60 to-emerald-900/40 rounded-xl border border-slate-700 flex items-center justify-around p-2 text-xs">
+                                <div class="text-rose-300"><strong>凹岸 (外側)</strong><br>🌊 侵蝕 / 水深</div>
+                                <div class="text-cyan-200 text-lg font-bold">➔ 水流方向 ➔</div>
+                                <div class="text-emerald-300"><strong>凸岸 (內側)</strong><br>🏖️ 沉積 / 水淺</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(widget);
+
+            } else if (u.calcType === 'earth_plate') {
+                widget.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <h3 class="font-bold text-rose-300 text-sm sm:text-base"><i class="fa-solid fa-volcano mr-2"></i>三大板塊邊界動態地質構造模擬</h3>
+                        <span class="text-xs bg-rose-800 text-rose-200 px-2.5 py-0.5 rounded-full">板塊運動</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700 space-y-1.5">
+                            <div class="text-rose-400 font-bold text-sm">1. 張裂型邊界 (← →)</div>
+                            <p class="text-slate-300"><strong>地質構造：</strong>大洋中洋脊、東非裂谷</p>
+                            <p class="text-slate-400"><strong>特性：</strong>岩漿湧出冷卻形成新地殼，伴隨淺源地震與玄武岩火山。</p>
+                        </div>
+                        <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700 space-y-1.5">
+                            <div class="text-cyan-400 font-bold text-sm">2. 聚合型邊界 (→ ←)</div>
+                            <p class="text-slate-300"><strong>地質構造：</strong>海溝、褶皺山脈 (喜馬拉雅山)</p>
+                            <p class="text-slate-400"><strong>特性：</strong>板塊擠壓碰撞，老地殼隱沒熔化消滅，產生強烈地震與造山運動。</p>
+                        </div>
+                        <div class="bg-slate-800 p-3.5 rounded-xl border border-slate-700 space-y-1.5">
+                            <div class="text-amber-400 font-bold text-sm">3. 錯動型邊界 (⇅)</div>
+                            <p class="text-slate-300"><strong>地質構造：</strong>轉形斷層 (聖安德列斯斷層)</p>
+                            <p class="text-slate-400"><strong>特性：</strong>板塊水平水平剪切滑動，不生成也不消滅地殼，多淺源地震。</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(widget);
+
+            } else if (u.calcType === 'earth_astro') {
+                widget.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <h3 class="font-bold text-indigo-300 text-sm sm:text-base"><i class="fa-solid fa-moon mr-2"></i>農曆月相盈虧與日食月食即時觀測儀</h3>
+                        <span class="text-xs bg-indigo-800 text-indigo-200 px-2.5 py-0.5 rounded-full">日月地系統</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
+                        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                            <div class="text-2xl mb-1">🌑</div>
+                            <strong class="text-indigo-300 block">新月 (朔)</strong>
+                            <span class="text-slate-400">農曆初一 (日食・大潮)</span>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                            <div class="text-2xl mb-1">🌓</div>
+                            <strong class="text-cyan-300 block">上弦月</strong>
+                            <span class="text-slate-400">農曆初七/八 (小潮)</span>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                            <div class="text-2xl mb-1">🌕</div>
+                            <strong class="text-yellow-300 block">滿月 (望)</strong>
+                            <span class="text-slate-400">農曆十五/十六 (月食・大潮)</span>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                            <div class="text-2xl mb-1">🌗</div>
+                            <strong class="text-amber-300 block">下弦月</strong>
+                            <span class="text-slate-400">農曆二十二/三 (小潮)</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(widget);
+
+            } else {
+                // Universal Formula & Dynamic Lab Summary Box
+                widget.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <h3 class="font-bold text-yellow-300 text-sm sm:text-base"><i class="fa-solid fa-microscope mr-2"></i>核心實驗原理與即時分析</h3>
+                        <span class="text-xs bg-yellow-900/60 text-yellow-200 px-2.5 py-0.5 rounded-full">會考重點實驗</span>
+                    </div>
+                    <div class="bg-slate-800/80 p-5 rounded-xl border border-slate-700 space-y-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        <p><strong class="text-white"><i class="fa-solid fa-circle-dot text-indigo-400 mr-2"></i>實驗核心目的：</strong>透過實驗操縱變因與控制變因，探究物理與化學量之間的正反比規律。</p>
+                        <p><strong class="text-white"><i class="fa-solid fa-triangle-exclamation text-amber-400 mr-2"></i>常見會考考點：</strong>注意實驗誤差來源、儀器歸零操作、對照組與實驗組設定及圖表斜率與截距物理意義。</p>
+                        <p><strong class="text-white"><i class="fa-solid fa-lightbulb text-cyan-400 mr-2"></i>單元解題技巧：</strong>熟記核心公式單位換算（MKS制與CGS制），作答前先確認題目所求之物理量與符號定義。</p>
+                    </div>
+                `;
+                container.appendChild(widget);
+            }
+        }
+
+        /* -------------------------------------------------------------
+           5. CURRENT QUIZ CONTROLLER (250 QUESTIONS ENGINE)
+        ------------------------------------------------------------- */
+        function initCurrentQuiz(u) {
+            currentQuizAnswers = {};
+            document.getElementById('quiz-progress-num').innerText = '0';
+            document.getElementById('quiz-score-num').innerText = '0';
+            document.getElementById('quiz-summary-box').classList.add('hidden');
+
+            const nav = document.getElementById('quiz-nav-btns');
+            const cards = document.getElementById('quiz-cards-container');
+            nav.innerHTML = '';
+            cards.innerHTML = '';
+
+            u.quiz.forEach((qItem, idx) => {
+                const qNum = idx + 1;
+                // Nav btn
+                const navBtn = document.createElement('button');
+                navBtn.id = `qbtn_${qNum}`;
+                navBtn.className = "w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-indigo-50 font-bold text-xs flex items-center justify-center transition";
+                navBtn.innerText = qNum;
+                navBtn.onclick = () => {
+                    const cardEl = document.getElementById(`qcard_${qNum}`);
+                    if (cardEl) cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                };
+                nav.appendChild(navBtn);
+
+                // Card
+                const card = document.createElement('div');
+                card.id = `qcard_${qNum}`;
+                card.className = "bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3 scroll-mt-24";
+
+                let optBtns = '';
+                qItem.opts.forEach((optText, optIdx) => {
+                    const isCorrect = (optIdx === qItem.ans);
+                    optBtns += `
+                        <button onclick="handleAnswer(${qNum}, ${optIdx}, ${isCorrect})" 
+                                class="qopt_${qNum} qopt_${qNum}_${optIdx} text-left p-3 rounded-lg border hover:bg-slate-50 transition w-full text-xs sm:text-sm">
+                            <span class="font-bold mr-1">${String.fromCharCode(65 + optIdx)}.</span> ${optText}
+                        </button>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="font-bold text-slate-800 text-sm sm:text-base">${qNum}. ${qItem.q}</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">${optBtns}</div>
+                    <div id="qexp_${qNum}" class="hidden text-xs p-3 rounded-lg mt-2"></div>
+                `;
+                cards.appendChild(card);
+            });
+        }
+
+        function handleAnswer(qNum, selectedIdx, isCorrect) {
+            currentQuizAnswers[qNum] = { selectedIdx, isCorrect };
+
+            const navBtn = document.getElementById(`qbtn_${qNum}`);
+            if (navBtn) {
+                navBtn.className = `w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-white font-bold text-xs flex items-center justify-center transition shadow-sm ${isCorrect ? 'bg-emerald-500' : 'bg-rose-500'}`;
+            }
+
+            const allBtns = document.querySelectorAll(`.qopt_${qNum}`);
+            allBtns.forEach(btn => btn.classList.remove('bg-emerald-100', 'border-emerald-500', 'bg-rose-100', 'border-rose-500', 'font-bold'));
+
+            const selBtn = document.querySelector(`.qopt_${qNum}_${selectedIdx}`);
+            const expDiv = document.getElementById(`qexp_${qNum}`);
+            expDiv.classList.remove('hidden');
+
+            const u = curriculumData.find(item => item.id === activeUnitId);
+            const qData = u.quiz[qNum - 1];
+
+            if (isCorrect) {
+                if (selBtn) selBtn.classList.add('bg-emerald-100', 'border-emerald-500', 'font-bold');
+                expDiv.className = "text-xs p-3 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 mt-2";
+                expDiv.innerHTML = `<strong><i class='fa-solid fa-circle-check text-emerald-600 mr-1'></i>回答正確！</strong> ${qData.exp}`;
+            } else {
+                if (selBtn) selBtn.classList.add('bg-rose-100', 'border-rose-500', 'font-bold');
+                expDiv.className = "text-xs p-3 rounded-lg bg-rose-50 text-rose-800 border border-rose-200 mt-2";
+                expDiv.innerHTML = `<strong><i class='fa-solid fa-circle-xmark text-rose-600 mr-1'></i>回答錯誤！</strong> 正確答案為 (${String.fromCharCode(65 + qData.ans)})。${qData.exp}`;
+            }
+
+            const answeredCount = Object.keys(currentQuizAnswers).length;
+            const correctCount = Object.values(currentQuizAnswers).filter(a => a.isCorrect).length;
+            const score = correctCount * 10;
+
+            document.getElementById('quiz-progress-num').innerText = answeredCount;
+            document.getElementById('quiz-score-num').innerText = score;
+
+            if (answeredCount === 10) {
+                const summaryBox = document.getElementById('quiz-summary-box');
+                document.getElementById('quiz-summary-score').innerText = score;
+                if (currentStudent) {
+                    document.getElementById('quiz-summary-student').innerText = currentStudent.name;
+                    saveStudentScore(currentStudent.name, activeUnitId, score);
+                }
+
+                let feedback = "";
+                if (score === 100) feedback = "太厲害了！100 分滿分通關，對本單元掌握無懈可擊！";
+                else if (score >= 80) feedback = "表現非常優異！對於本單元核心觀念已相當熟練！";
+                else if (score >= 60) feedback = "及格了！可以多複習上方重點整理加強較弱的觀念喔！";
+                else feedback = "別灰心，建議重新複習上方的互動實驗與重點整理後再試一次！";
+
+                document.getElementById('quiz-summary-feedback').innerText = feedback;
+                summaryBox.classList.remove('hidden');
+                summaryBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function resetCurrentQuiz() {
+            const u = curriculumData.find(item => item.id === activeUnitId);
+            if (u) initCurrentQuiz(u);
+        }
+    </script>
+</body>
+</html>
